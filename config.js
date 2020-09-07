@@ -10,4 +10,7 @@ const database = {
   autoInit: true
 };
 
-module.exports = apiName, database;
+module.exports = {
+  apiName: apiName,
+  database: database,
+};

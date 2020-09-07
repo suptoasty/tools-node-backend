@@ -4,12 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var coursesRouter = require('./routes/courses');
+var { indexRouter } = require('./routes/index');
+var { usersRouter } = require('./routes/users');
+var { coursesRouter } = require('./routes/courses');
 const bodyParser = require('body-parser');
 
-const apiName = require('./config');
+const { apiName } = require('./config');
 
 process.env.PORT = 3001; // port for api
 var app = express();

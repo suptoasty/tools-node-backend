@@ -44,4 +44,6 @@ router.post('/', function(req, res, next) {
   res.end('post at users');
 });
 
-module.exports = router;
+module.exports = {
+  usersRouter: router,
+};
