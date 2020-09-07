@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const mysql = require('mysql');
+const db = require('../src/database');
 
 /* Get course by id validated numbers 0-9 */
 router.get('/:id([0-9])', function(req, res, next) {

@@ -9,18 +9,7 @@ var usersRouter = require('./routes/users');
 var coursesRouter = require('./routes/courses');
 const bodyParser = require('body-parser');
 
-const apiName = 'courseapi'; // EX: url:port/apiName/routes
-
-// MySQL information, BAD FORM, but will get us going
-const database = {
-  hostname: "localhost",
-  port: 3001,
-  username: "root",
-  password: "",
-  database: "testdb", // must be database name EX: courses or courseList
-  autoInit: true
-};
-
+const apiName = require('./config');
 
 process.env.PORT = 3001; // port for api
 var app = express();

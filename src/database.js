@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const { database } = require('../app');
+const database = require('../config');
 
 // the database we are going to use
 const db = mysql.createConnection({
@@ -23,3 +23,6 @@ function createDefaultDatabase(name = 'testdb') {
     });
 
 };
+
+
+module.exports = db;
