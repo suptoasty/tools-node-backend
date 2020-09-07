@@ -5,10 +5,24 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users');
 var coursesRouter = require('./routes/courses');
+const bodyParser = require('body-parser');
 
-process.env.PORT = 3001;
+const apiName = 'courseapi'; // EX: url:port/apiName/routes
+
+// MySQL information, BAD FORM, but will get us going
+const database = {
+  hostname: "localhost",
+  port: 3001,
+  username: "root",
+  password: "",
+  database: "testdb", // must be database name EX: courses or courseList
+  autoInit: true
+};
+
+
+process.env.PORT = 3001; // port for api
 var app = express();
 
 // view engine setup
@@ -21,10 +35,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
-app.use('/courseapi/', indexRouter);
-app.use('/courseapi/courses', coursesRouter);
+// routes setup
+app.use('/' + apiName + '/', indexRouter);
+app.use('/' + apiName + '/courses/', coursesRouter);
+app.use('/' + apiName + '/users/', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,5 +55,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
