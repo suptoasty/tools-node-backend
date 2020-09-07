@@ -1,7 +1,6 @@
 var express = require('express');
-const { response } = require('../app');
 var router = express.Router();
-const mysql = require('mysql');
+const { db } = require('../src/database');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
