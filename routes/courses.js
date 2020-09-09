@@ -1,21 +1,18 @@
 var express = require('express');
 var router = express.Router();
-const { db, createDB, deleteDB, dbPool } = require('../src/database');
-
+const { db } = require('../src/database');
 
 router.get('/', function(req, res, next) {
-  res.send('Can not Access courses directly');
+  res.send('Can not Access courses directly use id');
 });
 
 /* Get course by id validated numbers 0-9 */
 router.get('/:id', async (req, res, next) => {
-  // res.send('respond with a resource');
-
   let id = req.params.id;
-  let sql = 'SELECT * FROM courseslist;';
+  let sql = 'SELECT * FROM courseslist WHERE course_id = ?;';
 
   try {
-    let query = await dbPool.query('SELECT * FROM courseslist WHERE course_id = ?;', [id]);
+    let query = await db.query(sql, [id]);
     query.on('result', (row, index) => {
       res.json(row); //send back the row as a json file
     });
@@ -23,6 +20,7 @@ router.get('/:id', async (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
+
 });
 
 // post course
