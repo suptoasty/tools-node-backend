@@ -8,25 +8,25 @@ router.get('/', function(req, res, next) {
 });
 
 /* Get course by id validated numbers 0-9 */
-router.get('/:id([0-9])', async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
   // res.send('respond with a resource');
 
+  let id = req.params.id;
   let table = 'courseList'; //change to actual table for production
   let sql = 'SELECT * FROM '+ table +';';
 
   try {
-    let result = dbPool.query('SELECT * FROM courseslist', [], (err, result, fields) => {
+    dbPool.query('SELECT * FROM courseslist WHERE course_id = '+ id +";", [], (err, result, fields) => {
       if(err) throw err;
       Object.keys(result).forEach((key) => {
-        console.log(result[key].course_name);
+        console.log(result[key]);
       });
     });
   } catch (error) {
     console.log(error);
   }
-
-  console.log("GET at /courses/" + req.params.id);
-  res.send('id: ' + req.params.id);
+  console.log("GET at /courses/" + id);
+  res.send('id: ' + id);
 });
 
 // post course
