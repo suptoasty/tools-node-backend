@@ -6,7 +6,7 @@ const database = {
   port: 3001,
   username: "root",
   password: "",
-  database: "courses", // must be database name EX: courses or courseList
+  databasename: "courses", // must be database name EX: courses or courseList
   autoInit: true
 };
 
