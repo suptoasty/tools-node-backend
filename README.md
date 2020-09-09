@@ -6,7 +6,7 @@
 3. `npm run dev`
 
 #### CRUD Commands / Routes
-GET Request: `localhost:3001/coursesapi/courses/:id`
+GET Request: `localhost:3001/coursesapi/courses/:id`  
 GET Result:  `{
     "course_id": #,
     "course_dept": "",
