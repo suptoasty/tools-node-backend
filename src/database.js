@@ -25,13 +25,20 @@ async function createDB(name = "courses") {
             console.log(err);
             throw err;
         })
-
         
-        await dbPool.query(`CREATE TABLE IF NOT EXISTS`+ name +`.courselist(
-        id int NOT NULL AUTO_INCREMENT,
-        name varchar(255),
-        PRIMARY KEY (id)
-        );`);
+        await dbPool.query(`CREATE TABLE IF NOT EXISTS `+ name +`.courseslist(
+            course_id int(255) NOT NULL AUTO_INCREMENT,
+            course_dept varchar(255) NOT NULL,
+            course_num varchar(255) NOT NULL,
+            course_level varchar(255) NOT NULL,
+            course_hours varchar(255) NOT NULL,
+            course_name varchar(255) NOT NULL,
+            course_desc varchar(255) NOT NULL,
+            PRIMARY KEY (course_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`)
+        .on('error', (err) => {
+            console.log(err);
+        });
 
         //other tables here
     } catch (error) {
