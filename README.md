@@ -17,3 +17,5 @@ GET Result:  `{
     "course_desc": ""
 }`
 
+POST Request: `{ "course_dept": "", "course_num": "", "course_level": "", "course_hours": "", "course_name": "", "course_desc": "" }`  
+POST Result Success: `{ id: # }`

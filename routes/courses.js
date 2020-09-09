@@ -42,7 +42,7 @@ router.post('/', async (req, res, next) => {
         throw new Error(err);
       });
       query.on('result', (row, index) => {
-        res.json(row);
+        res.json({ id: row.insertId});
       });
       
     } catch (error) {
