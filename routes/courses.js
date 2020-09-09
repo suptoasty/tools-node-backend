@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { db } = require('../src/database');
+const mysql = require('mysql');
 
 router.get('/', function(req, res, next) {
   res.send('Can not Access courses directly use id');
@@ -24,19 +25,33 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // post course
-router.post('/', function(req, res, next) {
-  console.log("POST at /courses/");
-  console.log(req.body);
+router.post('/', async (req, res, next) => {
 
   let course = req.body;
+  console.log(course);
   let errorMessage = validate(course);//validate request here
+
   // if statement to evaluate error message here
   if(errorMessage.length != 1) {
-    let sql = 'INSERT INTO test SET ?;';
+    let sql = 'INSERT INTO courses.coursesList SET ?;';
     //create query code here
+    try {
+      let query = await db.query(sql, [course]);
+      query.on('error', (err) => {
+        res.send(err);
+        throw new Error(err);
+      });
+      query.on('result', (row, index) => {
+        res.json(row);
+      });
+      
+    } catch (error) {
+      res.send(error);
+      throw new Error(error);
+    }
+
   } else {
-    //post logic here
-    res.send("courses post");
+    res.send("Post Failed");
   }
 
 });

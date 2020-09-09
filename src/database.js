@@ -10,13 +10,14 @@ const db = mysql.createPool({
     connectionLimit: 10,
 });
 
+
+
 // add to sql to create default databse
 async function createDB(name = "courses") {   
     try {
         let query = await db.query('create database if not exists '+ name +';');
         query.on('error', (err) => {
-            console.log(err);
-            throw err;
+            throw new Error(err);
         });
 
         query = await db.query(`CREATE TABLE IF NOT EXISTS `+ name +`.courseslist(
@@ -29,10 +30,9 @@ async function createDB(name = "courses") {
             course_desc varchar(255) NOT NULL,
             PRIMARY KEY (course_id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`
-        , [name]);
+        );
         query.on('error', (err) => {
-            console.log(err);
-            throw err;
+            throw new Error(err);
         });
 
         //other tables here
@@ -46,11 +46,11 @@ async function deleteDB(name = "courses") {
     try {
         let query = await db.query(`DROP DATABASE IF EXISTS `+ name +`;`);
         query.on('error', (err) => {
-            throw err;
+            throw new Error(err);
         });
         
     } catch (error) {
-        console.log(error);
+        throw new Error(error);
     }
 }
 
