@@ -21,11 +21,11 @@ const db = mysql.createConnection({
 // add to sql to create default databse
 async function createDB(name = "courses") {   
     try {
-        let res = await dbPool.query(`CREATE DATABASE IF NOT EXISTS `+ name +`;`).on('error', (err) => {
+        await dbPool.query(`CREATE DATABASE IF NOT EXISTS `+ name +`;`).on('error', (err) => {
             console.log(err);
             throw err;
         })
-        
+    
         await dbPool.query(`CREATE TABLE IF NOT EXISTS `+ name +`.courseslist(
             course_id int(255) NOT NULL AUTO_INCREMENT,
             course_dept varchar(255) NOT NULL,
@@ -38,6 +38,7 @@ async function createDB(name = "courses") {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`)
         .on('error', (err) => {
             console.log(err);
+            throw err;
         });
 
         //other tables here

@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { db, createDB, deleteDB } = require('../src/database');
+const { db, createDB, deleteDB, dbPool } = require('../src/database');
 
 
 router.get('/', function(req, res, next) {
@@ -14,7 +14,16 @@ router.get('/:id([0-9])', async function(req, res, next) {
   let table = 'courseList'; //change to actual table for production
   let sql = 'SELECT * FROM '+ table +';';
 
-  await createDB();
+  try {
+    let result = dbPool.query('SELECT * FROM courseslist', [], (err, result, fields) => {
+      if(err) throw err;
+      Object.keys(result).forEach((key) => {
+        console.log(result[key].course_name);
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   console.log("GET at /courses/" + req.params.id);
   res.send('id: ' + req.params.id);
