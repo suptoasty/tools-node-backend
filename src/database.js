@@ -10,17 +10,21 @@ const db = mysql.createPool({
     connectionLimit: 10,
 });
 
+var con = mysql.createConnection({
+    host: database.hostname,
+    user: database.username,
+    password: database.password
+});
 
 
-// add to sql to create default databse
-async function createDB(name = "courses") {   
+
+async function createDB(name = database.databasename) {   
     try {
-        let query = await db.query('create database if not exists '+ name +';');
-        query.on('error', (err) => {
-            throw new Error(err);
+        con.query('CREATE DATABASE IF NOT EXISTS '+ name +';', function(err, result) {
+            if (err) throw new Error(err);
         });
 
-        query = await db.query(`CREATE TABLE IF NOT EXISTS `+ name +`.courseslist(
+        con.query(`CREATE TABLE IF NOT EXISTS `+ name +`.courseslist(
             course_id int(255) NOT NULL AUTO_INCREMENT,
             course_dept varchar(255) NOT NULL,
             course_num varchar(255) NOT NULL,
@@ -29,10 +33,9 @@ async function createDB(name = "courses") {
             course_name varchar(255) NOT NULL,
             course_desc varchar(255) NOT NULL,
             PRIMARY KEY (course_id)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`
-        );
-        query.on('error', (err) => {
-            throw new Error(err);
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`, 
+            function(err, result) {
+                if (err) throw new Error(err);
         });
 
         //other tables here
@@ -42,15 +45,14 @@ async function createDB(name = "courses") {
     }            
 }
 
-async function deleteDB(name = "courses") {
+async function deleteDB(name = database.databasename) {
     try {
-        let query = await db.query(`DROP DATABASE IF EXISTS `+ name +`;`);
-        query.on('error', (err) => {
-            throw new Error(err);
+        con.query(`DROP DATABASE IF EXISTS `+ name +`;`, function(err, result) {
+            if (err) throw new Error(err);
         });
         
     } catch (error) {
-        throw new Error(error);
+        console.log(error);
     }
 }
 
