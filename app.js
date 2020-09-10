@@ -5,20 +5,15 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const { enableDebug } = require('./config');
-
 const { indexRouter } = require('./routes/index');
 const { usersRouter } = require('./routes/users');
 const { coursesRouter } = require('./routes/courses');
-const { debugRouter } = require('./routes/debug');
-
-
 const bodyParser = require('body-parser');
 
 const { apiName } = require('./config');
 
 process.env.PORT = 3001; // port for api
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,10 +30,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/' + apiName + '/', indexRouter);
 app.use('/' + apiName + '/courses/', coursesRouter);
 app.use('/' + apiName + '/users/', usersRouter);
-
-if (enableDebug) {
-  app.use('/' + apiName + '/debug/', debugRouter);
-}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
