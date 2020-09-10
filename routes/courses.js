@@ -1,53 +1,59 @@
 var express = require('express');
 var router = express.Router();
 const { db } = require('../src/database');
-const mysql = require('mysql');
 
+// TODO: GET all courses
 router.get('/', function(req, res, next) {
   res.send('Can not Access courses directly use id');
 });
 
-/* Get course by id validated numbers 0-9 */
+
+// TODO: GET courses by page
+
+
+// GET course by id
 router.get('/:id', async (req, res, next) => {
   let id = req.params.id;
   let sql = 'SELECT * FROM courseslist WHERE course_id = ?;';
 
   try {
-    let query = await db.query(sql, [id]);
-    query.on('result', (row, index) => {
-      res.json(row); //send back the row as a json file
+    db.query(sql, [id], function(err, result) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.json(result);
+      }
     });
-
-  } catch (error) {
+  } 
+  catch (error) {
     console.log(error);
+    res.send(error);
   }
 
 });
 
-// post course
-router.post('/', async (req, res, next) => {
 
+// POST course
+router.post('/', async (req, res, next) => {
   let course = req.body;
   console.log(course);
-  let errorMessage = validate(course);//validate request here
 
-  // if statement to evaluate error message here
+  let errorMessage = validate(course); //validate request here
   if(errorMessage.length != 1) {
-    let sql = 'INSERT INTO courses.coursesList SET ?;';
+    let sql = 'INSERT INTO courses.courseslist SET ?;';
     //create query code here
     try {
-      let query = await db.query(sql, [course]);
-      query.on('error', (err) => {
-        res.send(err);
-        throw new Error(err);
+      db.query(sql, [course], function(err, result) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.json({ id: result.insertId });
+        }
       });
-      query.on('result', (row, index) => {
-        res.json({ id: row.insertId});
-      });
-      
-    } catch (error) {
+    } 
+    catch (error) {
+      console.log(error);
       res.send(error);
-      throw new Error(error);
     }
 
   } else {
@@ -56,17 +62,33 @@ router.post('/', async (req, res, next) => {
 
 });
 
-// delete course with id
-router.delete('/:id', function(req, res, next) {
+
+// DELETE course with id
+router.delete('/:id', async function(req, res, next) {
   console.log("DELETE at /courses/" + req.params.id);
   let id = req.params.id;
-  // validation and delete logic here
+  let sql = 'DELETE FROM courses.courseslist WHERE course_id = ?;';
+
+  try {
+    db.query(sql, [id], function(err, result) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.json({ id: result.insertId});
+      }
+    });
+  } 
+  catch (error) {
+    console.log(error);
+    res.send(error);
+  }
 
   console.log(result);  
   res.end("course deleted");
 });
 
-// update course with id
+
+// PUT course with id
 router.put('/:id', function(req, res, next) {
   console.log("PUT at /courses/" + req.params.id);
   res.end("courses put");
