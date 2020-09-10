@@ -10,7 +10,7 @@ const db = mysql.createPool({
     connectionLimit: 10,
 });
 
-var con = mysql.createConnection({
+const con = mysql.createConnection({
     host: database.hostname,
     user: database.username,
     password: database.password
