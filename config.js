@@ -1,4 +1,4 @@
-const enableDebug = false;
+const enableDebug = true;
 const apiName = 'courseapi'; // EX: url:port/apiName/routes
 
 // MySQL information, BAD FORM, but will get us going
