@@ -68,7 +68,7 @@ router.post('/', async (req, res, next) => {
 
 
 // DELETE course with id
-router.delete('/:id', async function(req, res, next) {
+router.delete('/:id', async (req, res, next) => {
   console.log("DELETE at /courses/" + req.params.id);
   let id = req.params.id;
   let sql = 'DELETE FROM courses.courseslist WHERE course_id = ?;';
@@ -79,7 +79,7 @@ router.delete('/:id', async function(req, res, next) {
         res.status(500);
         res.send(err);
       } else {
-        res.json({ id: result.insertId});
+        res.json(result);
       }
     });
   } 
@@ -88,16 +88,38 @@ router.delete('/:id', async function(req, res, next) {
     res.status(500);
     res.send(error);
   }
-
-  console.log(result);  
-  res.end("course deleted");
 });
 
 
 // PUT course with id
-router.put('/:id', function(req, res, next) {
-  console.log("PUT at /courses/" + req.params.id);
-  res.end("courses put");
+router.put('/:id', async (req, res, next) => {
+  let course = req.body;
+  console.log(course);
+
+  let errorMessage = validate(course); //validate request here
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    let sql = 'UPDATE courseslist SET ? WHERE course_id = ?';
+    
+    try {
+      db.query(sql, [course, req.params.id], function(err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json(result);
+        }
+      });
+    } 
+    catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+
+  }
 });
 
 
