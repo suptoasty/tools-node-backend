@@ -19,6 +19,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     db.query(sql, [id], function(err, result) {
       if (err) {
+        res.status(500);
         res.send(err);
       } else {
         res.json(result);
@@ -27,6 +28,7 @@ router.get('/:id', async (req, res, next) => {
   } 
   catch (error) {
     console.log(error);
+    res.status(500);
     res.send(error);
   }
 
@@ -39,12 +41,16 @@ router.post('/', async (req, res, next) => {
   console.log(course);
 
   let errorMessage = validate(course); //validate request here
-  if(errorMessage.length != 1) {
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
     let sql = 'INSERT INTO courses.courseslist SET ?;';
-    //create query code here
+    
     try {
       db.query(sql, [course], function(err, result) {
         if (err) {
+          res.status(500);
           res.send(err);
         } else {
           res.json({ id: result.insertId });
@@ -53,13 +59,11 @@ router.post('/', async (req, res, next) => {
     } 
     catch (error) {
       console.log(error);
+      res.status(500);
       res.send(error);
     }
 
-  } else {
-    res.send("Post Failed");
   }
-
 });
 
 
@@ -72,6 +76,7 @@ router.delete('/:id', async function(req, res, next) {
   try {
     db.query(sql, [id], function(err, result) {
       if (err) {
+        res.status(500);
         res.send(err);
       } else {
         res.json({ id: result.insertId});
@@ -80,6 +85,7 @@ router.delete('/:id', async function(req, res, next) {
   } 
   catch (error) {
     console.log(error);
+    res.status(500);
     res.send(error);
   }
 
@@ -97,10 +103,12 @@ router.put('/:id', function(req, res, next) {
 
 // validate request here...returns error message
 function validate(course) {
-  let errorMessage = "Courses Error: ";
+  var errorMessage = '[';
 
-  // validations here using attributes from courses request
-
+  //if(course.course_attribute != undefined) {
+  //    errorMessage += '{"attributeName":"course_attribute" , "message":"Must have attribute"}';
+  
+  errorMessage += ']';
   return errorMessage;
 }
 
