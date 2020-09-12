@@ -24,7 +24,7 @@ jobs:
                   SOURCE: '/'
                   REMOTE_HOST: 'team1.eaglesoftwareteam.com'
                   REMOTE_USER: ubuntu
-                  TARGET: 'nodeapps/course-backend'
+                  TARGET: 'nodeapps/courses-backend'
             - name: Execute SSH commmands on remote server
               uses: JimCronqvist/action-ssh@master
               env:
@@ -34,9 +34,9 @@ jobs:
                   privateKey: ${{ secrets.PRIVATE_KEY }}
                   debug: false
                   command: |
-                      cd nodeapps/course-backend
+                      cd nodeapps/courses-backend
                       npm install
-                      sudo systemctl stop course-backend
-                      sudo cp course-backend.service /lib/systemd/system/course-backend.service
+                      sudo systemctl stop courses-backend
+                      sudo cp courses-backend.service /lib/systemd/system/courses-backend.service
                       sudo systemctl daemon-reload
-                      sudo systemctl start course-backend
+                      sudo systemctl start courses-backend
