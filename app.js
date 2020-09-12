@@ -10,7 +10,7 @@ const { usersRouter } = require('./routes/users');
 const { coursesRouter } = require('./routes/courses');
 const bodyParser = require('body-parser');
 
-const { apiName } = require('./config');
+const { apiName } = require('./config/config');
 
 process.env.PORT = 3001; // port for api
 const app = express();
