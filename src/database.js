@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const { database } = require('../config');
+const { database } = require('../config/config');
 
 //connection pool for successive queries...going to use for setup
 const db = mysql.createPool({

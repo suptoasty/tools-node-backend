@@ -21,7 +21,7 @@ jobs:
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
                   ARGS: '-rltgoDzvO --delete'
-                  SOURCE: '/'
+                  SOURCE: 'deploy/'
                   REMOTE_HOST: 'team1.eaglesoftwareteam.com'
                   REMOTE_USER: ubuntu
                   TARGET: 'nodeapps/courses-backend'
