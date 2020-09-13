@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const { database } = require('../config/config');
+const { database, init } = require('../config/config');
 
 //connection pool for successive queries...going to use for setup
 const db = mysql.createPool({
@@ -54,6 +54,11 @@ async function deleteDB(name = database.databasename) {
     } catch (error) {
         console.log(error);
     }
+}
+
+if(init) {
+    createDB(database.databasename);
+    init = false;
 }
 
 module.exports = {

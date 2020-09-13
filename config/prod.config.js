@@ -1,5 +1,6 @@
 const enableDebug = false;
 const apiName = 'courseapi'; // EX: url:port/apiName/routes
+let init = true;
 
 // MySQL information, BAD FORM, but will get us going
 const database = {
@@ -15,4 +16,5 @@ module.exports = {
   apiName: apiName,
   database: database,
   enableDebug: enableDebug,
+  init: init,
 };
