@@ -4,7 +4,23 @@ const { db } = require('../src/database');
 
 // TODO: GET all courses
 router.get('/', function(req, res, next) {
-  res.send('Can not Access courses directly use id');
+  let sql = 'SELECT * FROM courseslist;';
+
+  try {
+    db.query(sql, [], function(err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } 
+  catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
 });
 
 
