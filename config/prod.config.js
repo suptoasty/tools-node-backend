@@ -8,7 +8,7 @@ const database = {
   //port: 3306,
   username: "admin",
   password: "passwordt1",
-  databasename: "course", // must be database name EX: courses or courseList
+  databasename: "courses", // must be database name EX: courses or courseList
   autoInit: true
 }
 

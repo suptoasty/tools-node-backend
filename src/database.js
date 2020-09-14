@@ -58,7 +58,6 @@ async function deleteDB(name = database.databasename) {
 
 if(init) {
     createDB(database.databasename);
-    init = false;
 }
 
 module.exports = {
