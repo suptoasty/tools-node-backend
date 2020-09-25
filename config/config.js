@@ -1,16 +1,20 @@
+const enableDebug = true;
 const apiName = 'courseapi'; // EX: url:port/apiName/routes
+let init = false;
 
 // MySQL information, BAD FORM, but will get us going
 const database = {
   hostname: "localhost",
-  port: 3001,
+  //port: 3306,
   username: "root",
   password: "",
-  database: "courses", // must be database name EX: courses or courseList
+  databasename: "courses", // must be database name EX: courses or courseList
   autoInit: true
 };
 
 module.exports = {
   apiName: apiName,
   database: database,
+  enableDebug: enableDebug,
+  init: init,
 };

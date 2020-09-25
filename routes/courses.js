@@ -1,54 +1,152 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const { db } = require('../src/database');
 
-/* Get course by id validated numbers 0-9 */
-router.get('/:id([0-9])', function(req, res, next) {
-  // res.send('respond with a resource');
+// TODO: GET all courses
+router.get('/', function(req, res, next) {
+  let sql = 'SELECT * FROM courseslist;';
 
-  console.log("GET at /courses/" + req.params.id);
-  res.send('id: ' + req.params.id);
+  try {
+    db.query(sql, [], function(err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } 
+  catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
 });
 
-// post course
-router.post('/', function(req, res, next) {
-  console.log("POST at /courses/");
-  console.log(req.body);
 
-  let course = req.body;
-  let errorMessage = validate(course);//validate request here
-  // if statement to evaluate error message here
-  if(errorMessage.length != 1) {
+// TODO: GET courses by page
 
-  } else {
-    //post logic here
-    res.send("courses post");
+
+// GET course by id
+router.get('/:id', async (req, res, next) => {
+  let id = req.params.id;
+  let sql = 'SELECT * FROM courseslist WHERE course_id = ?;';
+
+  try {
+    db.query(sql, [id], function(err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } 
+  catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
   }
 
 });
 
-// delete course with id
-router.delete('/:id', function(req, res, next) {
-  console.log("DELETE at /courses/" + req.params.id);
-  let id = req.params.id;
-  // validation and delete logic here
 
-  res.end("courses delete");
+// POST course
+router.post('/', async (req, res, next) => {
+  let course = req.body;
+  console.log(course);
+
+  let errorMessage = validate(course); //validate request here
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    let sql = 'INSERT INTO courses.courseslist SET ?;';
+    
+    try {
+      db.query(sql, [course], function(err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json({ id: result.insertId });
+        }
+      });
+    } 
+    catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+
+  }
 });
 
-// update course with id
-router.put('/:id', function(req, res, next) {
-  console.log("PUT at /courses/" + req.params.id);
-  res.end("courses put");
+
+// DELETE course with id
+router.delete('/:id', async (req, res, next) => {
+  console.log("DELETE at /courses/" + req.params.id);
+  let id = req.params.id;
+  let sql = 'DELETE FROM courses.courseslist WHERE course_id = ?;';
+
+  try {
+    db.query(sql, [id], function(err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } 
+  catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
+
+
+// PUT course with id
+router.put('/:id', async (req, res, next) => {
+  let course = req.body;
+  console.log(course);
+
+  let errorMessage = validate(course); //validate request here
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    let sql = 'UPDATE courseslist SET ? WHERE course_id = ?';
+    
+    try {
+      db.query(sql, [course, req.params.id], function(err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json(result);
+        }
+      });
+    } 
+    catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+
+  }
 });
 
 
 // validate request here...returns error message
 function validate(course) {
-  let errorMessage = "Courses Error: ";
+  var errorMessage = '[';
 
-  // validations here using attributes from courses request
-
+  //if(course.course_attribute != undefined) {
+  //    errorMessage += '{"attributeName":"course_attribute" , "message":"Must have attribute"}';
+  
+  errorMessage += ']';
   return errorMessage;
 }
 
