@@ -1,3 +1,4 @@
+const { request } = require("express");
 const express = require("express");
 const router = express.Router();
 const { db } = require("../src/database");
@@ -16,7 +17,8 @@ router.post("/login", async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO courses.users SET ?;";
+    let sql =
+      "SELECT * FROM courses.users WHERE userName = ? AND userPassword = ?;";
 
     try {
       db.query(sql, [user], function (err, result) {
@@ -24,7 +26,14 @@ router.post("/login", async (req, res, next) => {
           res.status(500);
           res.send(err);
         } else {
-          res.json({ id: result.insertId });
+          if (result.length > 0) {
+            req.session.loggedin = true;
+            req.session.userName = user.userName;
+            //add res.redirect here
+          } else {
+            res.send("Incorrect UserName or Password");
+          }
+          res.end();
         }
       });
     } catch (error) {
