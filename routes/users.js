@@ -18,10 +18,10 @@ router.post("/login", async (req, res, next) => {
     res.send(errorMessage);
   } else {
     let sql =
-      "SELECT * FROM courses.users WHERE userName = ? AND userPassword = ?;";
+      "SELECT * FROM courses.users WHERE userName = ? and userPassword = ?;";
 
     try {
-      db.query(sql, [user], function (err, result) {
+      db.query(sql, [user.userName, user.userPassword], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
