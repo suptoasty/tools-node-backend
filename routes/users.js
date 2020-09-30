@@ -9,6 +9,8 @@ router.post("/login", async (req, res, next) => {
 
   let user = req.body;
 
+  console.log(req);
+
   let errorMessage = await validate(user); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
@@ -40,7 +42,7 @@ router.post("/logout", function (req, res, next) {
 
 // create a new user
 router.post("/", function (req, res, next) {
-  res.end("post at users");
+  res.redirect("post at users");
 });
 
 // validate request here...returns error message

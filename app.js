@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const express = require("express");
+const session = require("express-session");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -22,6 +23,13 @@ app.set("view engine", "pug");
 
 app.use(cors());
 app.use(logger("dev"));
+app.use(
+  session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
