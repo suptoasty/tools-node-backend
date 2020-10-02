@@ -93,7 +93,7 @@ async function createDB(name = database.databasename) {
         `.course_semester(
             course_semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             course int(255),
-            semester int(255)
+            semester int(255) UNSIGNED NOT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
