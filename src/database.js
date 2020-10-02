@@ -92,7 +92,7 @@ async function createDB(name = database.databasename) {
         name +
         `.course_semester(
             course_semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            course int(255),
+            course int(255) UNSIGNED NOT NULL,
             semester int(255) UNSIGNED NOT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
@@ -112,7 +112,7 @@ async function createDB(name = database.databasename) {
             course_hours varchar(255) NOT NULL,
             course_name varchar(255) NOT NULL,
             course_desc varchar(255) NOT NULL,
-            semester int(255) UNSIGNED NOT NULL,
+            semester int(255) UNSIGNED,
             FOREIGN KEY(semester) REFERENCES course_semester(course_semester_id) ON DELETE CASCADE ON UPDATE RESTRICT
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
