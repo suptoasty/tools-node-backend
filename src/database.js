@@ -146,8 +146,8 @@ async function createDB(name = database.databasename) {
             user_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             user_name varchar(100) NOT NULL,
             user_password varchar(100) NOT NULL,
-            student int(255) UNSIGNED NOT NULL,
-            advisor int(255) UNSIGNED NOT NULL,
+            student int(255) UNSIGNED,
+            advisor int(255) UNSIGNED,
             FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
             FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
