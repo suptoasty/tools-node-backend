@@ -92,8 +92,8 @@ async function createDB(name = database.databasename) {
         name +
         `.course_semester(
             course_semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            course int(255) UNSIGNED NOT NULL,
-            semester int(255) UNSIGNED NOT NULL
+            course int(255),
+            semester int(255)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -187,23 +187,24 @@ async function createDB(name = database.databasename) {
       }
     );
 
+    //NOT NEEDED
     //advisor_student
-    con.query(
-      `CREATE TABLE IF NOT EXISTS ` +
-        name +
-        `.student_advisor(
-            student_advisor int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            student int(255) UNSIGNED NOT NULL,
-            advisor int(255) UNSIGNED NOT NULL,
-            FOREIGN KEY(student) REFERENCES student(student_id)
-            ON DELETE CASCADE
-            ON UPDATE RESTRICT,
-            FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON DELETE CASCADE ON UPDATE RESTRICT
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
-      function (err, result) {
-        if (err) throw new Error(err);
-      }
-    );
+    // con.query(
+    //   `CREATE TABLE IF NOT EXISTS ` +
+    //     name +
+    //     `.student_advisor(
+    //         student_advisor int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    //         student int(255) UNSIGNED NOT NULL,
+    //         advisor int(255) UNSIGNED NOT NULL,
+    //         FOREIGN KEY(student) REFERENCES student(student_id)
+    //         ON DELETE CASCADE
+    //         ON UPDATE RESTRICT,
+    //         FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON DELETE CASCADE ON UPDATE RESTRICT
+    //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
+    //   function (err, result) {
+    //     if (err) throw new Error(err);
+    //   }
+    // );
   } catch (error) {
     console.log(error);
   }
