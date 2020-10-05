@@ -87,23 +87,7 @@ async function createDB(name = database.databasename) {
             degree int(255) UNSIGNED NOT NULL,
             advisor int(255) UNSIGNED NOT NULL,
             FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON UPDATE RESTRICT,
-            FOREIGN KEY(degree) REFERENCES student_degree(student_degree_id) ON UPDATE RESTRICT
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
-      function (err, result) {
-        if (err) throw new Error(err);
-      }
-    );
-
-    //coursesemester
-    con.query(
-      `CREATE TABLE IF NOT EXISTS ` +
-        name +
-        `.course_semester(
-            course_semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            course int(255) UNSIGNED NOT NULL,
-            semester int(255) UNSIGNED NOT NULL,
-            semester_grade varchar(2),
-            semester_status varchar(25)
+            FOREIGN KEY(degree) REFERENCES degree(degree_id) ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -115,32 +99,30 @@ async function createDB(name = database.databasename) {
       `CREATE TABLE IF NOT EXISTS ` +
         name +
         `.course(
-            course_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            course_dept varchar(255) NOT NULL,
-            course_num varchar(255) NOT NULL,
-            course_level varchar(255) NOT NULL,
-            course_hours varchar(255) NOT NULL,
-            course_name varchar(255) NOT NULL,
-            course_desc varchar(255) NOT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
+          course_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+          course_dept varchar(255) NOT NULL,
+          course_num varchar(255) NOT NULL,
+          course_level varchar(255) NOT NULL,
+          course_hours varchar(255) NOT NULL,
+          course_name varchar(255) NOT NULL,
+          course_desc varchar(255) NOT NULL
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
       }
     );
 
-    //add foreign keys to course_semester
+    //coursesemester
     con.query(
-      `ALTER TABLE ` +
+      `CREATE TABLE IF NOT EXISTS ` +
         name +
-        `.course_semester ADD CONSTRAINT FOREIGN KEY(course) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT;`,
-      function (err, result) {
-        if (err) throw new Error(err);
-      }
-    );
-    con.query(
-      `ALTER TABLE ` +
-        name +
-        `.course_semester ADD CONSTRAINT FOREIGN KEY(semester) REFERENCES semester(semester_id) ON DELETE CASCADE ON UPDATE RESTRICT;`,
+        `.course_semester(
+                  course_semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                  course int(255) UNSIGNED NOT NULL,
+                  semester int(255) UNSIGNED NOT NULL,
+                  FOREIGN KEY(course) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+                  FOREIGN KEY(semester) REFERENCES semester(semester_id) ON DELETE CASCADE ON UPDATE RESTRICT
+              ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
       }
@@ -182,22 +164,32 @@ async function createDB(name = database.databasename) {
     );
 
     //courseplan
-    // what about adding multiple courses to plan???
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
         `.course_plan(
             course_plan_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             course_plan_last_updated_date DATE,
-            course_plan_total_hours_semester int(100),
-            course_plan_total_hours_major int(100),
-            course_plan_gpa_major int(100),
-            course_plan_gpa_all_courses int(100),
-            course_plan_grade int(2),
             student int(255) UNSIGNED NOT NULL,
+            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
+      function (err, result) {
+        if (err) throw new Error(err);
+      }
+    );
+
+    //course_plan_item
+    con.query(
+      `CREATE TABLE IF NOT EXISTS ` +
+        name +
+        `.course_plan_item(
+            course_plan_item_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            course_plan_item_grade int(2),
+            course_plan_item_status varchar(255),
+            plan int(255) UNSIGNED,
             semester int(255) UNSIGNED,
             course int(255) UNSIGNED,
-            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+            FOREIGN KEY(plan) REFERENCES course_plan(course_plan_id) ON DELETE CASCADE ON UPDATE RESTRICT,
             FOREIGN KEY(semester) REFERENCES semester(semester_id) ON UPDATE RESTRICT,
             FOREIGN KEY(course) REFERENCES course(course_id) ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
