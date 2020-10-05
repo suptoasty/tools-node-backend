@@ -32,7 +32,10 @@ async function createDB(name = database.databasename) {
         name +
         `.degree(
             degree_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            degree_name varchar(255) NOT NULL
+            degree_name varchar(255) NOT NULL,
+            degree_dept varchar(255) NOT NULL,
+            degree_hourse varchar(255) NOT NULL,
+            course_plan int(255) UNSIGNED,
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -62,7 +65,8 @@ async function createDB(name = database.databasename) {
             advisor_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             advisor_fname varchar(255) NOT NULL,
             advisor_lname varchar(255) NOT NULL,
-            advisor_initial varchar(255)
+            advisor_initial varchar(255),
+            advisor_department varchar(255) NOT NULL,
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -78,8 +82,12 @@ async function createDB(name = database.databasename) {
             student_fname varchar(255) NOT NULL,
             student_lname varchar(255) NOT NULL,
             student_initial varchar(255),
+            student_major varchar(255),
+            student_graduation_date DATE NOT NULL,
+            degree int(255) UNSIGNED NOT NULL,
             advisor int(255) UNSIGNED NOT NULL,
-            FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON UPDATE RESTRICT
+            FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON UPDATE RESTRICT,
+            FOREIGN KEY(degree) REFERENCES student_degree(student_degree_id) ON UPDATE RESTRICT,
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -93,7 +101,9 @@ async function createDB(name = database.databasename) {
         `.course_semester(
             course_semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             course int(255) UNSIGNED NOT NULL,
-            semester int(255) UNSIGNED NOT NULL
+            semester int(255) UNSIGNED NOT NULL,
+            semester_grade varchar(2),
+            semester_status varchar(25)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -146,6 +156,7 @@ async function createDB(name = database.databasename) {
             user_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             user_name varchar(100) NOT NULL,
             user_password varchar(100) NOT NULL,
+            user_email varchar(255) NOT NULL,
             student int(255) UNSIGNED,
             advisor int(255) UNSIGNED,
             FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
@@ -179,6 +190,11 @@ async function createDB(name = database.databasename) {
         name +
         `.course_plan(
             course_plan_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            course_plan_last_updated_date DATE,
+            course_plan_total_hours_semester int(100),
+            course_plan_total_hours_major int(100),
+            course_plan_gpa_major int(100),
+            course_plan_gpa_all_courses int(100),
             student int(255) UNSIGNED NOT NULL,
             FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
@@ -186,25 +202,6 @@ async function createDB(name = database.databasename) {
         if (err) throw new Error(err);
       }
     );
-
-    //NOT NEEDED
-    //advisor_student
-    // con.query(
-    //   `CREATE TABLE IF NOT EXISTS ` +
-    //     name +
-    //     `.student_advisor(
-    //         student_advisor int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    //         student int(255) UNSIGNED NOT NULL,
-    //         advisor int(255) UNSIGNED NOT NULL,
-    //         FOREIGN KEY(student) REFERENCES student(student_id)
-    //         ON DELETE CASCADE
-    //         ON UPDATE RESTRICT,
-    //         FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON DELETE CASCADE ON UPDATE RESTRICT
-    //     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
-    //   function (err, result) {
-    //     if (err) throw new Error(err);
-    //   }
-    // );
   } catch (error) {
     console.log(error);
   }
