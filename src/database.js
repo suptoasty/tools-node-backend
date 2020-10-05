@@ -34,7 +34,7 @@ async function createDB(name = database.databasename) {
             degree_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             degree_name varchar(255) NOT NULL,
             degree_dept varchar(255) NOT NULL,
-            degree_hourse varchar(255) NOT NULL,
+            degree_hours varchar(255) NOT NULL,
             course_plan int(255) UNSIGNED,
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
