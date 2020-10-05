@@ -88,7 +88,7 @@ async function createDB(name = database.databasename) {
             degree int(255) UNSIGNED NOT NULL,
             advisor int(255) UNSIGNED NOT NULL,
             FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON UPDATE RESTRICT,
-            FOREIGN KEY(degree) REFERENCES student_degree(student_degree_id) ON UPDATE RESTRICT,
+            FOREIGN KEY(degree) REFERENCES degree(degree_id) ON UPDATE RESTRICT,
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -170,12 +170,12 @@ async function createDB(name = database.databasename) {
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
-        `.student_degree(
-            student_degree_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            student int(255) UNSIGNED NOT NULL,
+        `.degree_plan(
+            degree_plan_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             degree int(255) UNSIGNED NOT NULL,
-            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
-            FOREIGN KEY(degree) REFERENCES degree(degree_id) ON DELETE CASCADE ON UPDATE RESTRICT
+            course int(255) UNSIGNED NOT NULL,
+            FOREIGN KEY(degree) REFERENCES degree(degree_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+            FOREIGN KEY(course) REFERENCES courselist(course_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
