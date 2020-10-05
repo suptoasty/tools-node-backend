@@ -57,6 +57,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
+    //
     //advisor
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
