@@ -58,7 +58,7 @@ router.post("/", async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO " + config.database + ".course SET ?;";
+    let sql = "INSERT INTO " + config.database.databasename + ".course SET ?;";
 
     try {
       db.query(sql, [course], function (err, result) {
@@ -81,7 +81,7 @@ router.post("/", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   console.log("DELETE at /courses/" + req.params.id);
   let id = req.params.id;
-  let sql = "DELETE FROM " + config.database + ".course WHERE course_id = ?;";
+  let sql = "DELETE FROM " + config.database.databasename + ".course WHERE course_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
