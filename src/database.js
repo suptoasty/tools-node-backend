@@ -121,9 +121,7 @@ async function createDB(name = database.databasename) {
             course_level varchar(255) NOT NULL,
             course_hours varchar(255) NOT NULL,
             course_name varchar(255) NOT NULL,
-            course_desc varchar(255) NOT NULL,
-            semester int(255) UNSIGNED,
-            FOREIGN KEY(semester) REFERENCES course_semester(course_semester_id) ON DELETE CASCADE ON UPDATE RESTRICT
+            course_desc varchar(255) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -196,7 +194,11 @@ async function createDB(name = database.databasename) {
             course_plan_gpa_major int(100),
             course_plan_gpa_all_courses int(100),
             student int(255) UNSIGNED NOT NULL,
-            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT
+            semster int(255) UNSINGED,
+            course int(255) UNSINGED,
+            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+            FOREIGN KEY(semester) REFERENCES semester(semester_id) ON UPDATE RESTRICT,
+            FOREIGN KEY(course) REFERENCES courseslist(course_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
