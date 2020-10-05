@@ -57,6 +57,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
+    //
     //advisor
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
@@ -114,16 +115,14 @@ async function createDB(name = database.databasename) {
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
-        `.courseslist(
+        `.course(
             course_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             course_dept varchar(255) NOT NULL,
             course_num varchar(255) NOT NULL,
             course_level varchar(255) NOT NULL,
             course_hours varchar(255) NOT NULL,
             course_name varchar(255) NOT NULL,
-            course_desc varchar(255) NOT NULL,
-            semester int(255) UNSIGNED,
-            FOREIGN KEY(semester) REFERENCES course_semester(course_semester_id) ON DELETE CASCADE ON UPDATE RESTRICT
+            course_desc varchar(255) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -134,7 +133,7 @@ async function createDB(name = database.databasename) {
     con.query(
       `ALTER TABLE ` +
         name +
-        `.course_semester ADD CONSTRAINT FOREIGN KEY(course) REFERENCES courseslist(course_id) ON DELETE CASCADE ON UPDATE RESTRICT;`,
+        `.course_semester ADD CONSTRAINT FOREIGN KEY(course) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT;`,
       function (err, result) {
         if (err) throw new Error(err);
       }
@@ -171,12 +170,12 @@ async function createDB(name = database.databasename) {
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
-        `.student_degree(
-            student_degree_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            student int(255) UNSIGNED NOT NULL,
+        `.degree_plan(
+            degree_plan_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             degree int(255) UNSIGNED NOT NULL,
-            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
-            FOREIGN KEY(degree) REFERENCES degree(degree_id) ON DELETE CASCADE ON UPDATE RESTRICT
+            course int(255) UNSIGNED NOT NULL,
+            FOREIGN KEY(degree) REFERENCES degree(degree_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+            FOREIGN KEY(course) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -195,8 +194,13 @@ async function createDB(name = database.databasename) {
             course_plan_total_hours_major int(100),
             course_plan_gpa_major int(100),
             course_plan_gpa_all_courses int(100),
+            course_plan_grade int(2),
             student int(255) UNSIGNED NOT NULL,
-            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT
+            semester int(255) UNSIGNED,
+            course int(255) UNSIGNED,
+            FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+            FOREIGN KEY(semester) REFERENCES semester(semester_id) ON UPDATE RESTRICT,
+            FOREIGN KEY(course) REFERENCES course(course_id) ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);

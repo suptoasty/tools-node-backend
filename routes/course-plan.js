@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("../src/database");
+const config = require("../config/config");
 
 // TODO: GET all courses
 router.get("/", function (req, res, next) {
-  let sql = "SELECT * FROM courseslist;";
+  let sql = "SELECT * FROM course;";
 
   try {
     db.query(sql, [], function (err, result) {
@@ -27,7 +28,7 @@ router.get("/", function (req, res, next) {
 // GET course by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM courseslist WHERE course_id = ?;";
+  let sql = "SELECT * FROM course WHERE course_id = ?;";
 
   let range = req.params.id.split("-");
 
@@ -57,7 +58,7 @@ router.post("/", async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO courses.courseslist SET ?;";
+    let sql = "INSERT INTO " + config.database + ".course SET ?;";
 
     try {
       db.query(sql, [course], function (err, result) {
@@ -80,7 +81,7 @@ router.post("/", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   console.log("DELETE at /courses/" + req.params.id);
   let id = req.params.id;
-  let sql = "DELETE FROM courses.courseslist WHERE course_id = ?;";
+  let sql = "DELETE FROM " + config.database + ".course WHERE course_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -108,7 +109,7 @@ router.put("/:id", async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE courseslist SET ? WHERE course_id = ?";
+    let sql = "UPDATE course SET ? WHERE course_id = ?";
 
     try {
       db.query(sql, [course, req.params.id], function (err, result) {
