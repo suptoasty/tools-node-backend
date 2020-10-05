@@ -20,7 +20,7 @@ router.post("/login", async (req, res, next) => {
   } else {
     let sql =
       "SELECT * FROM " +
-      config.database +
+      config.database.databasename +
       ".users WHERE userName = ? and userPassword = ?;";
 
     try {
