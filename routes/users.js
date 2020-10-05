@@ -2,6 +2,7 @@ const { request } = require("express");
 const express = require("express");
 const router = express.Router();
 const { db } = require("../src/database");
+const config = require("../config/config");
 
 // log a user in
 router.post("/login", async (req, res, next) => {
@@ -18,7 +19,9 @@ router.post("/login", async (req, res, next) => {
     res.send(errorMessage);
   } else {
     let sql =
-      "SELECT * FROM courses.users WHERE userName = ? and userPassword = ?;";
+      "SELECT * FROM " +
+      config.database +
+      ".users WHERE userName = ? and userPassword = ?;";
 
     try {
       db.query(sql, [user.userName, user.userPassword], function (err, result) {

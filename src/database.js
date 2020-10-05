@@ -114,7 +114,7 @@ async function createDB(name = database.databasename) {
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
-        `.courseslist(
+        `.course(
             course_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             course_dept varchar(255) NOT NULL,
             course_num varchar(255) NOT NULL,
@@ -132,7 +132,7 @@ async function createDB(name = database.databasename) {
     con.query(
       `ALTER TABLE ` +
         name +
-        `.course_semester ADD CONSTRAINT FOREIGN KEY(course) REFERENCES courseslist(course_id) ON DELETE CASCADE ON UPDATE RESTRICT;`,
+        `.course_semester ADD CONSTRAINT FOREIGN KEY(course) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT;`,
       function (err, result) {
         if (err) throw new Error(err);
       }
@@ -174,7 +174,7 @@ async function createDB(name = database.databasename) {
             degree int(255) UNSIGNED NOT NULL,
             course int(255) UNSIGNED NOT NULL,
             FOREIGN KEY(degree) REFERENCES degree(degree_id) ON DELETE CASCADE ON UPDATE RESTRICT,
-            FOREIGN KEY(course) REFERENCES courseslist(course_id) ON DELETE CASCADE ON UPDATE RESTRICT
+            FOREIGN KEY(course) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -199,7 +199,7 @@ async function createDB(name = database.databasename) {
             course int(255) UNSIGNED,
             FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
             FOREIGN KEY(semester) REFERENCES semester(semester_id) ON UPDATE RESTRICT,
-            FOREIGN KEY(course) REFERENCES courseslist(course_id) ON UPDATE RESTRICT
+            FOREIGN KEY(course) REFERENCES course(course_id) ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
