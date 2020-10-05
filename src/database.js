@@ -82,7 +82,6 @@ async function createDB(name = database.databasename) {
             student_fname varchar(255) NOT NULL,
             student_lname varchar(255) NOT NULL,
             student_initial varchar(255),
-            student_major varchar(255),
             student_graduation_date DATE NOT NULL,
             degree int(255) UNSIGNED NOT NULL,
             advisor int(255) UNSIGNED NOT NULL,
