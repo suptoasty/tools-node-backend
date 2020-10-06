@@ -66,7 +66,7 @@ async function createDB(name = database.databasename) {
             advisor_fname varchar(255) NOT NULL,
             advisor_lname varchar(255) NOT NULL,
             advisor_initial varchar(255),
-            advisor_department varchar(255) NOT NULL
+            advisor_department varchar(255)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -83,8 +83,8 @@ async function createDB(name = database.databasename) {
             student_lname varchar(255) NOT NULL,
             student_initial varchar(255),
             student_graduation_date DATE NOT NULL,
-            degree int(255) UNSIGNED NOT NULL,
-            advisor int(255) UNSIGNED NOT NULL,
+            degree int(255) UNSIGNED,
+            advisor int(255) UNSIGNED,
             FOREIGN KEY(advisor) REFERENCES advisor(advisor_id) ON UPDATE RESTRICT,
             FOREIGN KEY(degree) REFERENCES degree(degree_id) ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
