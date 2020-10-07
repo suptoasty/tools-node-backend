@@ -11,6 +11,7 @@ const { usersRouter } = require("./routes/users");
 const { coursesRouter } = require("./routes/courses");
 const { coursePlanRouter } = require("./routes/course-plan");
 const { degreeRouter } = require("./routes/degree");
+const { degreePlanRouter } = require("./routes/degree-plan");
 const bodyParser = require("body-parser");
 
 const { apiName } = require("./config/config");
@@ -42,6 +43,7 @@ app.use("/" + apiName + "/courses/", coursesRouter);
 app.use("/" + apiName + "/users/", usersRouter);
 app.use("/" + apiName + "/course-plan/", coursePlanRouter);
 app.use("/" + apiName + "/degrees/", degreeRouter);
+app.use("/" + apiName + "/degree-plans/", degreePlanRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
