@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/nodeapps/courses-backend/
-ExecStart=/usr/bin/npm run dev
-Restart=on-failure
+ExecStart=/usr/bin/npm run start
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
