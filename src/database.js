@@ -18,6 +18,12 @@ const con = mysql.createConnection({
 
 async function createDB(name = database.databasename) {
   try {
+    con.query("DROP DATABASE IF EXISTS " + name + ";", function (
+      err,
+      result
+    ) {
+      if (err) throw new Error(err);
+    });
     //db
     con.query("CREATE DATABASE IF NOT EXISTS " + name + ";", function (
       err,
