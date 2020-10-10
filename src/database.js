@@ -19,14 +19,13 @@ const con = mysql.createConnection({
 async function createDB(name = database.databasename) {
   try {
     //db
-    con.query("CREATE DATABASE IF NOT EXISTS " + name + ";", function (
-      err,
-      result
-    ) {
+    con.query("CREATE DATABASE IF NOT EXISTS " + name + ";", function (err, result) {
       if (err) throw new Error(err);
     });
 
-    //degree
+
+
+    // degree
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -41,7 +40,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //semester
+    // term
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -56,8 +55,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //
-    //advisor
+    // advisor
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -73,7 +71,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //student
+    // student
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -93,7 +91,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //course
+    // course
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -111,7 +109,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //coursesemester
+    // course_term
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -127,7 +125,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //user
+    // user
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -146,7 +144,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //studentdegree
+    // degree_plan
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -162,7 +160,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //courseplan
+    // course_plan
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
@@ -177,7 +175,7 @@ async function createDB(name = database.databasename) {
       }
     );
 
-    //course_plan_item
+    // course_plan_item
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
