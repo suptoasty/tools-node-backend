@@ -166,7 +166,7 @@ async function createDB(name = database.databasename) {
         name +
         `.course_plan(
             course_plan_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            course_plan_last_updated_date DATE,
+            course_plan_last_updated DATETIME,
             student int(255) UNSIGNED NOT NULL,
             FOREIGN KEY(student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
