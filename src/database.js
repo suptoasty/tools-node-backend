@@ -44,11 +44,27 @@ async function createDB(name = database.databasename) {
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
+        `.term(
+          term_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+          term_name varchar(255) NOT NULL,
+          term_abbr varchar(255) NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
+      function (err, result) {
+        if (err) throw new Error(err);
+      }
+    );
+
+    // semester
+    con.query(
+      `CREATE TABLE IF NOT EXISTS ` +
+        name +
         `.semester(
             semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
             semester_name varchar(255) NOT NULL,
             semester_start DATE NOT NULL,
-            semester_end DATE NOT NULL
+            semester_end DATE NOT NULL,
+            semester_term int(255) UNSIGNED NOT NULL,
+            FOREIGN KEY(semester_term) REFERENCES term(term_id) ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
@@ -113,13 +129,12 @@ async function createDB(name = database.databasename) {
     con.query(
       `CREATE TABLE IF NOT EXISTS ` +
         name +
-        `.course_semester(
-                  course_semester_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                  course int(255) UNSIGNED NOT NULL,
-                  semester int(255) UNSIGNED NOT NULL,
-                  FOREIGN KEY(course) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT,
-                  FOREIGN KEY(semester) REFERENCES semester(semester_id) ON DELETE CASCADE ON UPDATE RESTRICT
-              ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
+        `.course_term (
+          course_id int(255) UNSIGNED NOT NULL,
+          term_id int(255) UNSIGNED NOT NULL,
+          FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+          FOREIGN KEY(term_id) REFERENCES term(term_id) ON DELETE CASCADE ON UPDATE RESTRICT
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
       }
