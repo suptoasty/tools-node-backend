@@ -153,5 +153,5 @@ function validate(student) {
 }
 
 module.exports = {
-  usersRouter: router,
+  studentRouter: router,
 };
