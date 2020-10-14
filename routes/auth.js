@@ -43,6 +43,7 @@ router.post("/login", async (req, res, next) => {
         res.send(err);
       } else {
         //set token here
+        console.log(result);
         res.json(result);
       }
     });
@@ -55,7 +56,7 @@ router.post("/login", async (req, res, next) => {
   //create new token for our database
   //create session
 
-  res.end();
+  // res.end();
 });
 
 router.post("/logout", (req, res, next) => {
