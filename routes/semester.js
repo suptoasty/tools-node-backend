@@ -7,9 +7,9 @@ const config = require("../config/config");
 
 
 
-// GET all students
+// GET all semesters
 router.get("/", function (req, res, next) {
-  let sql = "SELECT * FROM student;";
+  let sql = "SELECT * FROM semester JOIN term ON (term.term_id = semester.semester_term);";
 
   try {
     db.query(sql, [], function (err, result) {
@@ -29,12 +29,10 @@ router.get("/", function (req, res, next) {
 
 
 
-// GET student by id
+// GET semester by id
 router.get('/:id', async (req, res, next) => {
   let id = req.params.id;
-  let sql = 'SELECT * FROM student WHERE student_id = ?;';
-
-  let range = req.params.id.split('-');
+  let sql = 'SELECT * FROM semester JOIN term ON (term.term_id = semester.semester_term) WHERE semester_id = ?;';
 
   try {
     db.query(sql, [id], function(err, result) {
@@ -56,20 +54,20 @@ router.get('/:id', async (req, res, next) => {
 
 
 
-// POST student
+// POST semester
 router.post('/', async (req, res, next) => {
-  let student = req.body;
-  console.log(student);
+  let semester = req.body;
+  console.log(semester);
 
-  let errorMessage = validate(student); //validate request here
+  let errorMessage = validate(semester); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = 'INSERT INTO student SET ?;';
+    let sql = 'INSERT INTO semester SET ?;';
     
     try {
-      db.query(sql, [student], function(err, result) {
+      db.query(sql, [semester], function(err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -87,11 +85,11 @@ router.post('/', async (req, res, next) => {
 });
 
 
-// DELETE student with id
+// DELETE semester
 router.delete('/:id', async (req, res, next) => {
-  console.log("DELETE at /student/" + req.params.id);
+  console.log("DELETE at /semester/" + req.params.id);
   let id = req.params.id;
-  let sql = 'DELETE FROM student WHERE student_id = ?;';
+  let sql = 'DELETE FROM semester WHERE semester_id = ?;';
 
   try {
     db.query(sql, [id], function(err, result) {
@@ -111,20 +109,20 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 
-// PUT student with id
+// PUT semester with id
 router.put('/:id', async (req, res, next) => {
-  let student = req.body;
-  console.log(student);
+  let semester = req.body;
+  console.log(semester);
 
-  let errorMessage = validate(student); //validate request here
+  let errorMessage = validate(semester); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = 'UPDATE student SET ? WHERE student_id = ?';
+    let sql = 'UPDATE semester SET ? WHERE semester_id = ?';
     
     try {
-      db.query(sql, [student, req.params.id], function(err, result) {
+      db.query(sql, [semester, req.params.id], function(err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -138,7 +136,6 @@ router.put('/:id', async (req, res, next) => {
       res.status(500);
       res.send(error);
     }
-
   }
 });
 
@@ -153,5 +150,5 @@ function validate(student) {
 }
 
 module.exports = {
-  usersRouter: router,
+  semesterRouter: router,
 };
