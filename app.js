@@ -5,23 +5,21 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const { indexRouter } = require("./routes/index");
-const { usersRouter } = require("./routes/users");
-const { coursesRouter } = require("./routes/courses");
-const { coursePlanRouter } = require("./routes/course-plan");
-const { degreeRouter } = require("./routes/degree");
-const { degreePlanRouter } = require("./routes/degree-plan");
-const { advisorRouter } = require("./routes/advisor");
 const { authRouter } = require("./routes/auth");
+const { advisorRouter } = require("./routes/advisor");
+const { coursePlanRouter } = require("./routes/course-plan");
+const { coursesRouter } = require("./routes/courses");
+const { degreeRouter } = require("./routes/degree");
 const { semesterRouter } = require("./routes/semester");
 const { studentRouter } = require("./routes/student");
 const { termRouter } = require("./routes/term");
-const bodyParser = require("body-parser");
+const { usersRouter } = require("./routes/users");
 
 const { apiName } = require("./config/config");
-
-process.env.PORT = 3001; // port for api
+process.env.PORT = 3001;
 const app = express();
 
 // view engine setup
@@ -44,16 +42,15 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // routes setup
 app.use("/" + apiName + "/", indexRouter);
-app.use("/" + apiName + "/courses/", coursesRouter);
-app.use("/" + apiName + "/users/", usersRouter);
-app.use("/" + apiName + "/course-plan/", coursePlanRouter);
-app.use("/" + apiName + "/degrees/", degreeRouter);
-app.use("/" + apiName + "/degree-plans/", degreePlanRouter);
 app.use("/" + apiName + "/advisor/", advisorRouter);
 app.use("/" + apiName + "/auth/", authRouter);
+app.use("/" + apiName + "/course-plan/", coursePlanRouter);
+app.use("/" + apiName + "/courses/", coursesRouter);
+app.use("/" + apiName + "/degrees/", degreeRouter);
 app.use("/" + apiName + "/semester/", semesterRouter);
 app.use("/" + apiName + "/student/", studentRouter);
 app.use("/" + apiName + "/term/", termRouter);
+app.use("/" + apiName + "/users/", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
