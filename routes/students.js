@@ -4,9 +4,6 @@ const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-
-
-
 // GET all students
 router.get("/", function (req, res, next) {
   let sql = "SELECT * FROM student;";
@@ -27,17 +24,16 @@ router.get("/", function (req, res, next) {
   }
 });
 
-
-
 // GET student by id
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = 'SELECT * FROM student WHERE student_id = ?;';
+  let sql =
+    "SELECT * FROM user RIGHT JOIN student ON user.student=student.student_id WHERE student_id = ?; ";
 
-  let range = req.params.id.split('-');
+  let range = req.params.id.split("-");
 
   try {
-    db.query(sql, [id], function(err, result) {
+    db.query(sql, [id], function (err, result) {
       if (err) {
         res.status(500);
         res.send(err);
@@ -45,19 +41,15 @@ router.get('/:id', async (req, res, next) => {
         res.json(result);
       }
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.log(error);
     res.status(500);
     res.send(error);
   }
-
 });
 
-
-
 // POST student
-router.post('/', async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   let student = req.body;
   console.log(student);
 
@@ -66,19 +58,19 @@ router.post('/', async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = 'INSERT INTO student SET ?;';
-    
+    let sql = "INSERT INTO student SET ?;";
+
     try {
-      db.query(sql, [student], function(err, result) {
+      db.query(sql, [student], function (err, result) {
         if (err) {
+          console.log(err);
           res.status(500);
           res.send(err);
         } else {
           res.json({ id: result.insertId });
         }
       });
-    } 
-    catch (error) {
+    } catch (error) {
       console.log(error);
       res.status(500);
       res.send(error);
@@ -86,15 +78,14 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-
 // DELETE student with id
-router.delete('/:id', async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   console.log("DELETE at /student/" + req.params.id);
   let id = req.params.id;
-  let sql = 'DELETE FROM student WHERE student_id = ?;';
+  let sql = "DELETE FROM student WHERE student_id = ?;";
 
   try {
-    db.query(sql, [id], function(err, result) {
+    db.query(sql, [id], function (err, result) {
       if (err) {
         res.status(500);
         res.send(err);
@@ -102,17 +93,15 @@ router.delete('/:id', async (req, res, next) => {
         res.json(result);
       }
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.log(error);
     res.status(500);
     res.send(error);
   }
 });
 
-
 // PUT student with id
-router.put('/:id', async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   let student = req.body;
   console.log(student);
 
@@ -121,10 +110,10 @@ router.put('/:id', async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = 'UPDATE student SET ? WHERE student_id = ?';
-    
+    let sql = "UPDATE student SET ? WHERE student_id = ?";
+
     try {
-      db.query(sql, [student, req.params.id], function(err, result) {
+      db.query(sql, [student, req.params.id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -132,17 +121,13 @@ router.put('/:id', async (req, res, next) => {
           res.json(result);
         }
       });
-    } 
-    catch (error) {
+    } catch (error) {
       console.log(error);
       res.status(500);
       res.send(error);
     }
-
   }
 });
-
-
 
 // validate request here...returns error message
 function validate(student) {
@@ -153,5 +138,5 @@ function validate(student) {
 }
 
 module.exports = {
-  usersRouter: router,
+  studentRouter: router,
 };

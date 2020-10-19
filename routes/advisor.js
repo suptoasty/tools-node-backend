@@ -28,7 +28,7 @@ router.get("/", function (req, res, next) {
 // GET advisor by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM advisor WHERE advisor_id = ?;";
+  let sql = `SELECT * FROM user RIGHT JOIN advisor ON user.advisor=advisor.advisor_id WHERE advisor_id = ?;`;
 
   let range = req.params.id.split("-");
 

@@ -42,6 +42,7 @@ router.post("/", async (req, res, next) => {
     try {
       db.query(sql, [user], function (err, result) {
         if (err) {
+          // console.log(err);
           res.status(500);
           res.send(err);
         } else {
