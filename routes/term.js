@@ -1,11 +1,12 @@
+const { request } = require("express");
 const express = require("express");
 const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-// TODO: GET all degree_planPlans
+// GET all terms
 router.get("/", function (req, res, next) {
-  let sql = "SELECT * FROM degree_plan;";
+  let sql = "SELECT * FROM term;";
 
   try {
     db.query(sql, [], function (err, result) {
@@ -23,14 +24,10 @@ router.get("/", function (req, res, next) {
   }
 });
 
-// TODO: GET degree_plans by page
-
-// GET degree_plan by id
+// GET term by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM degree_plan WHERE degree_plan_id = ?;";
-
-  let range = req.params.id.split("-");
+  let sql = "SELECT * FROM term WHERE term_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -48,21 +45,20 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// POST degree_plan
+// POST term
 router.post("/", async (req, res, next) => {
-  let degree_plan = req.body;
-  console.log(degree_plan);
+  let term = req.body;
+  console.log(term);
 
-  let errorMessage = validate(degree_plan); //validate request here
+  let errorMessage = validate(term); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql =
-      "INSERT INTO " + config.database.databasename + ".degree_plan SET ?;";
+    let sql = "INSERT INTO term SET ?;";
 
     try {
-      db.query(sql, [degree_plan], function (err, result) {
+      db.query(sql, [term], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -78,14 +74,11 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// DELETE degree_plan with id
+// DELETE student with id
 router.delete("/:id", async (req, res, next) => {
-  console.log("DELETE at /degree_plans/" + req.params.id);
+  console.log("DELETE at /term/" + req.params.id);
   let id = req.params.id;
-  let sql =
-    "DELETE FROM " +
-    config.database.databasename +
-    ".degree_plan WHERE degree_plan_id = ?;";
+  let sql = "DELETE FROM term WHERE term_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -103,20 +96,20 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// PUT degree_plan with id
+// PUT student with id
 router.put("/:id", async (req, res, next) => {
-  let degree_plan = req.body;
-  console.log(degree_plan);
+  let term = req.body;
+  console.log(term);
 
-  let errorMessage = validate(degree_plan); //validate request here
+  let errorMessage = validate(term); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE degree_plan SET ? WHERE degree_plan_id = ?";
+    let sql = "UPDATE term SET ? WHERE term_id  = ?";
 
     try {
-      db.query(sql, [degree_plan, req.params.id], function (err, result) {
+      db.query(sql, [term, req.params.id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -133,16 +126,13 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // validate request here...returns error message
-function validate(degree_plan) {
-  var errorMessage = "[";
-
-  //if(degree_plan.degree_plan_attribute != undefined) {
-  //    errorMessage += '{"attributeName":"degree_plan_attribute" , "message":"Must have attribute"}';
+function validate(term) {
+  let errorMessage = "[";
 
   errorMessage += "]";
   return errorMessage;
 }
 
 module.exports = {
-  degreePlanRouter: router,
+  termRouter: router,
 };

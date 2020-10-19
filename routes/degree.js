@@ -30,8 +30,6 @@ router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = "SELECT * FROM degree WHERE degree_id = ?;";
 
-  let range = req.params.id.split("-");
-
   try {
     db.query(sql, [id], function (err, result) {
       if (err) {
@@ -53,7 +51,7 @@ router.post("/", async (req, res, next) => {
   let degree = req.body;
   console.log(degree);
 
-  let errorMessage = validate(degree); //validate request here
+  let errorMessage = validateDegree(degree); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
@@ -81,10 +79,8 @@ router.post("/", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   console.log("DELETE at /degrees/" + req.params.id);
   let id = req.params.id;
-  let sql =
-    "DELETE FROM " +
-    config.database.databasename +
-    ".degree WHERE degree_id = ?;";
+  
+  let sql = "DELETE FROM degree WHERE degree_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -107,7 +103,7 @@ router.put("/:id", async (req, res, next) => {
   let degree = req.body;
   console.log(degree);
 
-  let errorMessage = validate(degree); //validate request here
+  let errorMessage = validateDegree(degree); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
@@ -131,8 +127,142 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
+// Degree_Plan
+// GET all degree_plan items for a degree
+router.get('/:id/courses', async (req, res, next) => {
+  let sql = "SELECT * FROM degree_plan WHERE degree = ?;";
+
+  try {
+    db.query(sql, [req.params.id], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
+
+// GET specific degree_plan
+router.get(':id/courses/:item_id', async (req, res, next) => {
+  let id = req.params.id;
+  let sql = "SELECT * FROM degree_plan WHERE degree_plan_id = ?;";
+
+  try {
+    db.query(sql, [id], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
+
+// PUT degree_plan
+router.put(':id/courses/:item_id', async (req, res, next) => {
+  let degreePlan = req.body;
+  console.log(degreePlan);
+
+  let errorMessage = validateDegreePlan(degreePlan); //validate request here
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    let sql = "UPDATE degree_plan SET ? WHERE degree_plan_id = ?";
+
+    try {
+      db.query(sql, [degreePlan, req.params.id], function (err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json(result);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+  }
+});
+
+// POST degree_plan
+router.post(':id/courses', async (req, res, next) => {
+  let degreePlan = req.body;
+  degreePlan.degree = req.params.id;
+  console.log(degreePlan);
+
+  let errorMessage = validateDegreePlan(degreePlan); //validate request here
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    let sql = "INSERT INTO degree_plan SET ?;";
+
+    try {
+      db.query(sql, [degreePlan], function (err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json({ id: result.insertId });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+  }
+});
+
+// DELETE degree_plan item
+router.delete(':id/courses/:degree_plan_id', async (req, res, next) => {
+  console.log("DELETE at /degrees/" + req.params.id + "/courses/" + req.params.degree_plan_id);
+
+  let sql = "DELETE FROM degree_plan WHERE degree_plan_id = ?;";
+
+  try {
+    db.query(sql, [req.params.degree_plan_id], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
+
+
 // validate request here...returns error message
-function validate(degree) {
+function validateDegree(degree) {
+  var errorMessage = "[";
+
+  //if(degree.degree_attribute != undefined) {
+  //    errorMessage += '{"attributeName":"degree_attribute" , "message":"Must have attribute"}';
+
+  errorMessage += "]";
+  return errorMessage;
+}
+
+function validateDegreePlan(degreePlan) {
   var errorMessage = "[";
 
   //if(degree.degree_attribute != undefined) {
