@@ -70,7 +70,7 @@ router.post("/", async (req, res, next) => {
   let course_plan = req.body;
   console.log(course_plan);
 
-  let errorMessage = validate(course_plan); //validate request here
+  let errorMessage = validate_plan(course_plan); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
@@ -121,7 +121,7 @@ router.put("/:id", async (req, res, next) => {
   let course_plan = req.body;
   console.log(course_plan);
 
-  let errorMessage = validate(course_plan); //validate request here
+  let errorMessage = validate_plan(course_plan); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
@@ -193,12 +193,12 @@ router.get('/items/:item_id', async (req, res, next) => {
 
 // PUT course plan item
 router.put(':id/items/:item_id', async (req, res, next) => {
-  let course_plan = req.body;
-  course_plan.plan = req.params.id;
-  course_plan.course_plan_item_id = req.params.item_id;
-  console.log(course_plan);
+  let cp_item = req.body;
+  cp_item.plan = req.params.id;
+  cp_item.course_plan_item_id = req.params.item_id;
+  console.log(cp_item);
 
-  let errorMessage = validate(course_plan); //validate request here
+  let errorMessage = validate_item(cp_item); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
@@ -206,7 +206,7 @@ router.put(':id/items/:item_id', async (req, res, next) => {
     let sql = "UPDATE course_plan_item SET ? WHERE course_plan_id = ?";
 
     try {
-      db.query(sql, [course_plan, req.params.item_id], function (err, result) {
+      db.query(sql, [cp_item, req.params.item_id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -223,17 +223,61 @@ router.put(':id/items/:item_id', async (req, res, next) => {
 });
 
 // POST course plan item
-router.post(':id/items');
+router.post(':id/items', async (req, res, next) => {
+  let cp_item = req.body;
+  console.log(cp_item);
+
+  let errorMessage = validate_item(cp_item); //validate request here
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    let sql = "INSERT INTO course_plan_item SET ?;";
+
+    try {
+      db.query(sql, [cp_item], function (err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json({ id: result.insertId });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+  }
+});
 
 // DELETE course plan item
-router.delete(':id/items/:item_id');
+router.delete(':id/items/:item_id', async (req, res, next) => {
+  console.log("DELETE at /courses/" + req.params.id + "/items/" + req.params.item_id);
+  let sql = "DELETE FROM course_plan_item WHERE course_plan_item_id = ?;";
+
+  try {
+    db.query(sql, [req.params.item_id], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
 
 
 
 
 
 // validate request here...returns error message
-function validate(course) {
+function validate_plan(course) {
   var errorMessage = "[";
 
   //if(course.course_attribute != undefined) {
@@ -244,7 +288,10 @@ function validate(course) {
 }
 
 function validate_item(cp_item) {
+  var errorMessage = "[";
 
+  errorMessage += "]";
+  return errorMessage;
 }
 
 module.exports = {
