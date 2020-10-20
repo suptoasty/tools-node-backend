@@ -13,18 +13,10 @@ const { advisorRouter } = require("./routes/advisor");
 const { coursePlanRouter } = require("./routes/course-plan");
 const { coursesRouter } = require("./routes/courses");
 const { degreeRouter } = require("./routes/degree");
-<<<<<<< HEAD
-const { degreePlanRouter } = require("./routes/degree-plan");
-const { advisorRouter } = require("./routes/advisor");
-const { authRouter } = require("./routes/auth");
-const { studentRouter } = require("./routes/students");
-const bodyParser = require("body-parser");
-=======
 const { semesterRouter } = require("./routes/semester");
 const { studentRouter } = require("./routes/student");
 const { termRouter } = require("./routes/term");
 const { usersRouter } = require("./routes/users");
->>>>>>> 1c620c95fa947acc0b79b80628ddf8bc3cb6a819
 
 const { apiName } = require("./config/config");
 process.env.PORT = 3001;
