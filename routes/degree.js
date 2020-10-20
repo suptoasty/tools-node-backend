@@ -49,6 +49,7 @@ router.get("/:id", async (req, res, next) => {
 // POST degree
 router.post("/", async (req, res, next) => {
   let degree = req.body;
+  degree.degree_id = undefined
   console.log(degree);
 
   let errorMessage = validateDegree(degree); //validate request here
@@ -56,7 +57,7 @@ router.post("/", async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO " + config.database.databasename + ".degree SET ?;";
+    let sql = "INSERT INTO degree SET ?;";
 
     try {
       db.query(sql, [degree], function (err, result) {
@@ -77,9 +78,7 @@ router.post("/", async (req, res, next) => {
 
 // DELETE degree with id
 router.delete("/:id", async (req, res, next) => {
-  console.log("DELETE at /degrees/" + req.params.id);
   let id = req.params.id;
-  
   let sql = "DELETE FROM degree WHERE degree_id = ?;";
 
   try {
@@ -101,6 +100,7 @@ router.delete("/:id", async (req, res, next) => {
 // PUT degree with id
 router.put("/:id", async (req, res, next) => {
   let degree = req.body;
+  degree.degree_id = req.params.id
   console.log(degree);
 
   let errorMessage = validateDegree(degree); //validate request here
