@@ -3,7 +3,7 @@ const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-// TODO: GET all degrees
+// GET all degrees
 router.get("/", function (req, res, next) {
   let sql = "SELECT * FROM degree;";
 
@@ -22,8 +22,6 @@ router.get("/", function (req, res, next) {
     res.send(error);
   }
 });
-
-// TODO: GET degrees by page
 
 // GET degree by id
 router.get("/:id", async (req, res, next) => {

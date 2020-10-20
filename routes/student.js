@@ -5,7 +5,7 @@ const { db } = require("../src/database");
 const config = require("../config/config");
 
 // GET all students
-router.get("/", function (req, res, next) {
+router.get("/", async (req, res, next) => {
   let sql = "SELECT * FROM student;";
 
   try {
@@ -29,8 +29,6 @@ router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql =
     "SELECT * FROM user RIGHT JOIN student ON user.student=student.student_id WHERE student_id = ?; ";
-
-  let range = req.params.id.split("-");
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -80,7 +78,6 @@ router.post("/", async (req, res, next) => {
 
 // DELETE student with id
 router.delete("/:id", async (req, res, next) => {
-  console.log("DELETE at /student/" + req.params.id);
   let id = req.params.id;
   let sql = "DELETE FROM student WHERE student_id = ?;";
 

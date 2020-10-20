@@ -4,7 +4,7 @@ const { db } = require("../src/database");
 const config = require("../config/config");
 
 // GET all courseplans
-router.get("/", function (req, res, next) {
+router.get("/", async (req, res, next) => {
   let sql = "SELECT * FROM course_plan;";
 
   try {
@@ -96,7 +96,6 @@ router.post("/", async (req, res, next) => {
 
 // DELETE courseplan with id
 router.delete("/:id", async (req, res, next) => {
-  console.log("DELETE at /courses/" + req.params.id);
   let id = req.params.id;
   let sql = "DELETE FROM course_plan WHERE course_id = ?;";
 
@@ -171,7 +170,6 @@ router.get('/:id/items', async (req, res, next) => {
 
 // GET specific course plan item
 router.get('/:id/items/:item_id', async (req, res, next) => {
-  let id = req.params.id;
   let item_id = req.params.item_id;
   let sql = "SELECT * FROM course_plan_item WHERE course_plan_item_id = ?;";
 
@@ -254,7 +252,6 @@ router.post('/:id/items', async (req, res, next) => {
 
 // DELETE course plan item
 router.delete('/:id/items/:item_id', async (req, res, next) => {
-  console.log("DELETE at /courses/" + req.params.id + "/items/" + req.params.item_id);
   let sql = "DELETE FROM course_plan_item WHERE course_plan_item_id = ?;";
 
   try {

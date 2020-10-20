@@ -3,8 +3,8 @@ const router = express.Router();
 const { db } = require('../src/database');
 const config = require('../config/config');
 
-// TODO: GET all courses
-router.get('/', function(req, res, next) {
+// GET all courses
+router.get('/', async (req, res, next) => {
   let sql = 'SELECT * FROM course;';
 
   try {
@@ -24,16 +24,10 @@ router.get('/', function(req, res, next) {
   }
 });
 
-
-// TODO: GET courses by page
-
-
 // GET course by id
 router.get('/:id', async (req, res, next) => {
   let id = req.params.id;
   let sql = 'SELECT * FROM course WHERE course_id = ?;';
-
-  let range = req.params.id.split('-');
 
   try {
     db.query(sql, [id], function(err, result) {
@@ -50,9 +44,7 @@ router.get('/:id', async (req, res, next) => {
     res.status(500);
     res.send(error);
   }
-
 });
-
 
 // POST course
 router.post('/', async (req, res, next) => {
@@ -64,7 +56,7 @@ router.post('/', async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = 'INSERT INTO '+config.database.databasename+'.course SET ?;';
+    let sql = 'INSERT INTO course SET ?;';
     
     try {
       db.query(sql, [course], function(err, result) {
@@ -88,9 +80,8 @@ router.post('/', async (req, res, next) => {
 
 // DELETE course with id
 router.delete('/:id', async (req, res, next) => {
-  console.log("DELETE at /courses/" + req.params.id);
   let id = req.params.id;
-  let sql = 'DELETE FROM '+config.database.databasename+'.course WHERE course_id = ?;';
+  let sql = 'DELETE FROM course WHERE course_id = ?;';
 
   try {
     db.query(sql, [id], function(err, result) {

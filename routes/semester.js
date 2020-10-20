@@ -8,7 +8,7 @@ const config = require("../config/config");
 
 
 // GET all semesters
-router.get("/", function (req, res, next) {
+router.get("/", async (req, res, next) => {
   let sql = "SELECT * FROM semester JOIN term ON (term.term_id = semester.semester_term);";
 
   try {
@@ -88,7 +88,6 @@ router.post('/', async (req, res, next) => {
 
 // DELETE semester
 router.delete('/:id', async (req, res, next) => {
-  console.log("DELETE at /semester/" + req.params.id);
   let id = req.params.id;
   let sql = 'DELETE FROM semester WHERE semester_id = ?;';
 

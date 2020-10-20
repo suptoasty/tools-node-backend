@@ -9,8 +9,6 @@ router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = "SELECT * FROM user WHERE user_id = ?;";
 
-  let range = req.params.id.split("-");
-
   try {
     db.query(sql, [id], function (err, result) {
       if (err) {
@@ -37,12 +35,11 @@ router.post("/", async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO " + config.database.databasename + ".user SET ?;";
+    let sql = "INSERT INTO user SET ?;";
 
     try {
       db.query(sql, [user], function (err, result) {
         if (err) {
-          // console.log(err);
           res.status(500);
           res.send(err);
         } else {
@@ -59,10 +56,8 @@ router.post("/", async (req, res, next) => {
 
 // DELETE user with id
 router.delete("/:id", async (req, res, next) => {
-  console.log("DELETE at /users/" + req.params.id);
   let id = req.params.id;
-  let sql =
-    "DELETE FROM " + config.database.databasename + ".user WHERE user_id = ?;";
+  let sql = "DELETE FROM user WHERE user_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {

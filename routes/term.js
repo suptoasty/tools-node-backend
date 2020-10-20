@@ -5,7 +5,7 @@ const { db } = require("../src/database");
 const config = require("../config/config");
 
 // GET all terms
-router.get("/", function (req, res, next) {
+router.get("/", async (req, res, next) => {
   let sql = "SELECT * FROM term;";
 
   try {
@@ -76,7 +76,6 @@ router.post("/", async (req, res, next) => {
 
 // DELETE student with id
 router.delete("/:id", async (req, res, next) => {
-  console.log("DELETE at /term/" + req.params.id);
   let id = req.params.id;
   let sql = "DELETE FROM term WHERE term_id = ?;";
 

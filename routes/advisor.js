@@ -4,7 +4,7 @@ const { db } = require("../src/database");
 const config = require("../config/config");
 
 // TODO: GET all advisors
-router.get("/", function (req, res, next) {
+router.get("/", async (req, res, next) => {
   let sql = "SELECT * FROM advisor;";
 
   try {
@@ -29,8 +29,6 @@ router.get("/", function (req, res, next) {
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = `SELECT * FROM user RIGHT JOIN advisor ON user.advisor=advisor.advisor_id WHERE advisor_id = ?;`;
-
-  let range = req.params.id.split("-");
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -58,7 +56,7 @@ router.post("/", async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO " + config.database.databasename + ".advisor SET ?;";
+    let sql = "INSERT INTO advisor SET ?;";
 
     try {
       db.query(sql, [advisor], function (err, result) {
@@ -79,12 +77,8 @@ router.post("/", async (req, res, next) => {
 
 // DELETE advisor with id
 router.delete("/:id", async (req, res, next) => {
-  console.log("DELETE at /advisors/" + req.params.id);
   let id = req.params.id;
-  let sql =
-    "DELETE FROM " +
-    config.database.databasename +
-    ".advisor WHERE advisor_id = ?;";
+  let sql = "DELETE FROM advisor WHERE advisor_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
