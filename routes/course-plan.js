@@ -147,7 +147,7 @@ router.put("/:id", async (req, res, next) => {
 
 
 
-
+// Course plan items
 // GET all course plan items for a course plan
 router.get('/:id/items', async (req, res, next) => {
   let id = req.params.id;
@@ -170,7 +170,7 @@ router.get('/:id/items', async (req, res, next) => {
 });
 
 // GET specific course plan item
-router.get('/items/:item_id', async (req, res, next) => {
+router.get('/:id/items/:item_id', async (req, res, next) => {
   let id = req.params.id;
   let item_id = req.params.item_id;
   let sql = "SELECT * FROM course_plan_item WHERE course_plan_item_id = ?;";
@@ -192,7 +192,7 @@ router.get('/items/:item_id', async (req, res, next) => {
 });
 
 // PUT course plan item
-router.put(':id/items/:item_id', async (req, res, next) => {
+router.put('/:id/items/:item_id', async (req, res, next) => {
   let cp_item = req.body;
   cp_item.plan = req.params.id;
   cp_item.course_plan_item_id = req.params.item_id;
@@ -203,7 +203,7 @@ router.put(':id/items/:item_id', async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE course_plan_item SET ? WHERE course_plan_id = ?";
+    let sql = "UPDATE course_plan_item SET ? WHERE course_plan_item_id = ?";
 
     try {
       db.query(sql, [cp_item, req.params.item_id], function (err, result) {
@@ -223,8 +223,9 @@ router.put(':id/items/:item_id', async (req, res, next) => {
 });
 
 // POST course plan item
-router.post(':id/items', async (req, res, next) => {
+router.post('/:id/items', async (req, res, next) => {
   let cp_item = req.body;
+  cp_item.course_plan_item_id = undefined;
   console.log(cp_item);
 
   let errorMessage = validate_item(cp_item); //validate request here
@@ -252,7 +253,7 @@ router.post(':id/items', async (req, res, next) => {
 });
 
 // DELETE course plan item
-router.delete(':id/items/:item_id', async (req, res, next) => {
+router.delete('/:id/items/:item_id', async (req, res, next) => {
   console.log("DELETE at /courses/" + req.params.id + "/items/" + req.params.item_id);
   let sql = "DELETE FROM course_plan_item WHERE course_plan_item_id = ?;";
 
