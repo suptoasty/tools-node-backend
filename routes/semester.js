@@ -57,6 +57,7 @@ router.get('/:id', async (req, res, next) => {
 // POST semester
 router.post('/', async (req, res, next) => {
   let semester = req.body;
+  semester.semester_id = undefined
   console.log(semester);
 
   let errorMessage = validate(semester); //validate request here
@@ -112,6 +113,7 @@ router.delete('/:id', async (req, res, next) => {
 // PUT semester with id
 router.put('/:id', async (req, res, next) => {
   let semester = req.body;
+  semester.semester_id = req.params.id
   console.log(semester);
 
   let errorMessage = validate(semester); //validate request here
