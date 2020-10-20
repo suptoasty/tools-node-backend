@@ -129,7 +129,7 @@ router.put("/:id", async (req, res, next) => {
 
 // Degree_Plan
 // GET all degree_plan items for a degree
-router.get('/:id/courses', async (req, res, next) => {
+router.get('/:id/items', async (req, res, next) => {
   let sql = "SELECT * FROM degree_plan WHERE degree = ?;";
 
   try {
@@ -148,8 +148,8 @@ router.get('/:id/courses', async (req, res, next) => {
   }
 });
 
-// GET specific degree_plan
-router.get(':id/courses/:item_id', async (req, res, next) => {
+// GET specific degree_plan item
+router.get('/:id/items/:item_id', async (req, res, next) => {
   let id = req.params.id;
   let sql = "SELECT * FROM degree_plan WHERE degree_plan_id = ?;";
 
@@ -169,9 +169,10 @@ router.get(':id/courses/:item_id', async (req, res, next) => {
   }
 });
 
-// PUT degree_plan
-router.put(':id/courses/:item_id', async (req, res, next) => {
+// PUT degree_plan item
+router.put('/:id/items/:item_id', async (req, res, next) => {
   let degreePlan = req.body;
+  degreePlan.degree_plan_id = req.params.item_id
   console.log(degreePlan);
 
   let errorMessage = validateDegreePlan(degreePlan); //validate request here
@@ -198,9 +199,10 @@ router.put(':id/courses/:item_id', async (req, res, next) => {
   }
 });
 
-// POST degree_plan
-router.post(':id/courses', async (req, res, next) => {
+// POST degree_plan item
+router.post('/:id/items', async (req, res, next) => {
   let degreePlan = req.body;
+  degreePlan.degree_plan_id = undefined
   degreePlan.degree = req.params.id;
   console.log(degreePlan);
 
@@ -229,9 +231,7 @@ router.post(':id/courses', async (req, res, next) => {
 });
 
 // DELETE degree_plan item
-router.delete(':id/courses/:degree_plan_id', async (req, res, next) => {
-  console.log("DELETE at /degrees/" + req.params.id + "/courses/" + req.params.degree_plan_id);
-
+router.delete('/:id/items/:degree_plan_id', async (req, res, next) => {
   let sql = "DELETE FROM degree_plan WHERE degree_plan_id = ?;";
 
   try {
