@@ -3,9 +3,9 @@ const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-// GET all courseplans
-router.get("/", async (req, res, next) => {
-  let sql = "SELECT * FROM course_plan;";
+// GET all degrees
+router.get("/", function (req, res, next) {
+  let sql = "SELECT * FROM degree;";
 
   try {
     db.query(sql, [], function (err, result) {
@@ -23,31 +23,10 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// GET courseplans by student_id
-router.get("/student/:id", async (req, res, next) => {
-  let id = req.params.id;
-  let sql = "SELECT * FROM course_plan WHERE student = ?;";
-
-  try {
-    db.query(sql, [id], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
-});
-
-// GET courseplan by course_plan_id
+// GET degree by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM course_plan WHERE course_plan_id = ?;";
+  let sql = "SELECT * FROM degree WHERE degree_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -65,20 +44,21 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// POST courseplan
+// POST degree
 router.post("/", async (req, res, next) => {
-  let course_plan = req.body;
-  console.log(course_plan);
+  let degree = req.body;
+  degree.degree_id = undefined;
+  console.log(degree);
 
-  let errorMessage = validate_plan(course_plan); //validate request here
+  let errorMessage = validateDegree(degree); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO course_plan SET ?;";
+    let sql = "INSERT INTO degree SET ?;";
 
     try {
-      db.query(sql, [course_plan], function (err, result) {
+      db.query(sql, [degree], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -94,10 +74,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// DELETE courseplan with id
+// DELETE degree with id
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "DELETE FROM course_plan WHERE course_id = ?;";
+  let sql = "DELETE FROM degree WHERE degree_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -115,20 +95,21 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// PUT courseplan with id
+// PUT degree with id
 router.put("/:id", async (req, res, next) => {
-  let course_plan = req.body;
-  console.log(course_plan);
+  let degree = req.body;
+  degree.degree_id = req.params.id;
+  console.log(degree);
 
-  let errorMessage = validate_plan(course_plan); //validate request here
+  let errorMessage = validateDegree(degree); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE course_plan SET ? WHERE course_plan_id = ?";
+    let sql = "UPDATE degree SET ? WHERE degree_id = ?";
 
     try {
-      db.query(sql, [course_plan, req.params.id], function (err, result) {
+      db.query(sql, [degree, req.params.id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -144,11 +125,31 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-// Course plan items
-// GET all course plan items for a course plan
+// Degree_Plan
+// GET all degree_plan items for a degree
 router.get("/:id/items", async (req, res, next) => {
+  let sql = "SELECT * FROM degree_plan WHERE degree = ?;";
+
+  try {
+    db.query(sql, [req.params.id], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
+
+// GET specific degree_plan item
+router.get("/:id/items/:item_id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM course_plan_item WHERE plan = ?;";
+  let sql = "SELECT * FROM degree_plan WHERE degree_plan_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -166,43 +167,21 @@ router.get("/:id/items", async (req, res, next) => {
   }
 });
 
-// GET specific course plan item
-router.get("/:id/items/:item_id", async (req, res, next) => {
-  let item_id = req.params.item_id;
-  let sql = "SELECT * FROM course_plan_item WHERE course_plan_item_id = ?;";
-
-  try {
-    db.query(sql, [item_id], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
-});
-
-// PUT course plan item
+// PUT degree_plan item
 router.put("/:id/items/:item_id", async (req, res, next) => {
-  let cp_item = req.body;
-  cp_item.plan = req.params.id;
-  cp_item.course_plan_item_id = req.params.item_id;
-  console.log(cp_item);
+  let degreePlan = req.body;
+  degreePlan.degree_plan_id = req.params.item_id;
+  console.log(degreePlan);
 
-  let errorMessage = validate_item(cp_item); //validate request here
+  let errorMessage = validateDegreePlan(degreePlan); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE course_plan_item SET ? WHERE course_plan_item_id = ?";
+    let sql = "UPDATE degree_plan SET ? WHERE degree_plan_id = ?";
 
     try {
-      db.query(sql, [cp_item, req.params.item_id], function (err, result) {
+      db.query(sql, [degreePlan, req.params.id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -218,21 +197,22 @@ router.put("/:id/items/:item_id", async (req, res, next) => {
   }
 });
 
-// POST course plan item
+// POST degree_plan item
 router.post("/:id/items", async (req, res, next) => {
-  let cp_item = req.body;
-  cp_item.course_plan_item_id = undefined;
-  console.log(cp_item);
+  let degreePlan = req.body;
+  degreePlan.degree_plan_id = undefined;
+  degreePlan.degree = req.params.id;
+  console.log(degreePlan);
 
-  let errorMessage = validate_item(cp_item); //validate request here
+  let errorMessage = validateDegreePlan(degreePlan); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO course_plan_item SET ?;";
+    let sql = "INSERT INTO degree_plan SET ?;";
 
     try {
-      db.query(sql, [cp_item], function (err, result) {
+      db.query(sql, [degreePlan], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -248,12 +228,12 @@ router.post("/:id/items", async (req, res, next) => {
   }
 });
 
-// DELETE course plan item
-router.delete("/:id/items/:item_id", async (req, res, next) => {
-  let sql = "DELETE FROM course_plan_item WHERE course_plan_item_id = ?;";
+// DELETE degree_plan item
+router.delete("/:id/items/:degree_plan_id", async (req, res, next) => {
+  let sql = "DELETE FROM degree_plan WHERE degree_plan_id = ?;";
 
   try {
-    db.query(sql, [req.params.item_id], function (err, result) {
+    db.query(sql, [req.params.degree_plan_id], function (err, result) {
       if (err) {
         res.status(500);
         res.send(err);
@@ -269,23 +249,26 @@ router.delete("/:id/items/:item_id", async (req, res, next) => {
 });
 
 // validate request here...returns error message
-function validate_plan(course) {
+function validateDegree(degree) {
   var errorMessage = "[";
 
-  //if(course.course_attribute != undefined) {
-  //    errorMessage += '{"attributeName":"course_attribute" , "message":"Must have attribute"}';
+  //if(degree.degree_attribute != undefined) {
+  //    errorMessage += '{"attributeName":"degree_attribute" , "message":"Must have attribute"}';
 
   errorMessage += "]";
   return errorMessage;
 }
 
-function validate_item(cp_item) {
+function validateDegreePlan(degreePlan) {
   var errorMessage = "[";
+
+  //if(degree.degree_attribute != undefined) {
+  //    errorMessage += '{"attributeName":"degree_attribute" , "message":"Must have attribute"}';
 
   errorMessage += "]";
   return errorMessage;
 }
 
 module.exports = {
-  coursePlanRouter: router,
+  degreeRouter: router,
 };

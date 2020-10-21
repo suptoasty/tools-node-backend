@@ -4,39 +4,46 @@ const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-// log a user in
-router.post("/login", async (req, res, next) => {
-  // change to allow for session token in database
-  // ensure password is immediatly encrypted ??? if time
+// GET user by id
+router.get("/:id", async (req, res, next) => {
+  let id = req.params.id;
+  let sql = "SELECT * FROM user WHERE user_id = ?;";
 
+  try {
+    db.query(sql, [id], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
+
+// POST user
+router.post("/", async (req, res, next) => {
   let user = req.body;
+  console.log(user);
 
-  console.log(req);
-
-  let errorMessage = await validate(user); //validate request here
+  let errorMessage = validate(user); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql =
-      "SELECT * FROM " +
-      config.database.databasename +
-      ".users WHERE userName = ? and userPassword = ?;";
+    let sql = "INSERT INTO user SET ?;";
 
     try {
-      db.query(sql, [user.userName, user.userPassword], function (err, result) {
+      db.query(sql, [user], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
         } else {
-          if (result.length > 0) {
-            req.session.loggedin = true;
-            req.session.userName = user.userName;
-            //add res.redirect here
-          } else {
-            res.send("Incorrect UserName or Password");
-          }
-          res.end();
+          res.json({ id: result.insertId });
         }
       });
     } catch (error) {
@@ -47,27 +54,72 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-// log current user out
-router.post("/logout", function (req, res, next) {
-  res.end("post at logout");
+// DELETE user with id
+router.delete("/:id", async (req, res, next) => {
+  let id = req.params.id;
+  let sql = "DELETE FROM user WHERE user_id = ?;";
+
+  try {
+    db.query(sql, [id], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
 });
 
-// create a new user
-router.post("/", function (req, res, next) {
-  res.redirect("post at users");
+// PUT user with id
+router.put("/:id", async (req, res, next) => {
+  let user = req.body;
+  console.log(user);
+
+  let errorMessage = validate(user); //validate request here
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    let sql = "UPDATE user SET ? WHERE user_id = ?";
+
+    try {
+      db.query(sql, [user, req.params.id], function (err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json(result);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+  }
 });
 
 // validate request here...returns error message
 function validate(user) {
-  let errorMessage = "[";
+  var errorMessage = "[";
 
-  if (!user.userName) {
-    errorMessage += "Invalid User Name!\n";
+  if (user.user_name === "") {
+    errorMessage += "User Name must not be null!";
+  }
+  if (user.user_email === "") {
+    errorMessage += "User Email must not be null!";
+  }
+  if (user.user_password === "") {
+    errorMessage += "User Password must not be null!";
   }
 
-  if (!user.userPassword) {
-    errorMessage += "Invalid User Password!";
-  }
+  //if(advisor.advisor_attribute != undefined) {
+  //    errorMessage += '{"attributeName":"advisor_attribute" , "message":"Must have attribute"}';
 
   errorMessage += "]";
   return errorMessage;

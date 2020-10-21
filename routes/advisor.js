@@ -3,9 +3,9 @@ const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-// GET all courses
+// TODO: GET all advisors
 router.get("/", async (req, res, next) => {
-  let sql = "SELECT * FROM course;";
+  let sql = "SELECT * FROM advisor;";
 
   try {
     db.query(sql, [], function (err, result) {
@@ -23,10 +23,12 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// GET course by id
+// TODO: GET advisors by page
+
+// GET advisor by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM course WHERE course_id = ?;";
+  let sql = `SELECT * FROM user RIGHT JOIN advisor ON user.advisor=advisor.advisor_id WHERE advisor_id = ?;`;
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -44,20 +46,20 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// POST course
+// POST advisor
 router.post("/", async (req, res, next) => {
-  let course = req.body;
-  console.log(course);
+  let advisor = req.body;
+  console.log(advisor);
 
-  let errorMessage = validate(course); //validate request here
+  let errorMessage = validate(advisor); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO course SET ?;";
+    let sql = "INSERT INTO advisor SET ?;";
 
     try {
-      db.query(sql, [course], function (err, result) {
+      db.query(sql, [advisor], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -73,10 +75,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// DELETE course with id
+// DELETE advisor with id
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "DELETE FROM course WHERE course_id = ?;";
+  let sql = "DELETE FROM advisor WHERE advisor_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -94,20 +96,20 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// PUT course with id
+// PUT advisor with id
 router.put("/:id", async (req, res, next) => {
-  let course = req.body;
-  console.log(course);
+  let advisor = req.body;
+  console.log(advisor);
 
-  let errorMessage = validate(course); //validate request here
+  let errorMessage = validate(advisor); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE course SET ? WHERE course_id = ?";
+    let sql = "UPDATE advisor SET ? WHERE advisor_id = ?";
 
     try {
-      db.query(sql, [course, req.params.id], function (err, result) {
+      db.query(sql, [advisor, req.params.id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -124,16 +126,16 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // validate request here...returns error message
-function validate(course) {
+function validate(advisor) {
   var errorMessage = "[";
 
-  //if(course.course_attribute != undefined) {
-  //    errorMessage += '{"attributeName":"course_attribute" , "message":"Must have attribute"}';
+  //if(advisor.advisor_attribute != undefined) {
+  //    errorMessage += '{"attributeName":"advisor_attribute" , "message":"Must have attribute"}';
 
   errorMessage += "]";
   return errorMessage;
 }
 
 module.exports = {
-  coursesRouter: router,
+  advisorRouter: router,
 };

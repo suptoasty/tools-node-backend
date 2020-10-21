@@ -1,11 +1,12 @@
+const { request } = require("express");
 const express = require("express");
 const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-// GET all courses
+// GET all students
 router.get("/", async (req, res, next) => {
-  let sql = "SELECT * FROM course;";
+  let sql = "SELECT * FROM student;";
 
   try {
     db.query(sql, [], function (err, result) {
@@ -23,10 +24,11 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// GET course by id
+// GET student by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM course WHERE course_id = ?;";
+  let sql =
+    "SELECT * FROM user RIGHT JOIN student ON user.student=student.student_id WHERE student_id = ?; ";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -44,21 +46,22 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// POST course
+// POST student
 router.post("/", async (req, res, next) => {
-  let course = req.body;
-  console.log(course);
+  let student = req.body;
+  console.log(student);
 
-  let errorMessage = validate(course); //validate request here
+  let errorMessage = validate(student); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO course SET ?;";
+    let sql = "INSERT INTO student SET ?;";
 
     try {
-      db.query(sql, [course], function (err, result) {
+      db.query(sql, [student], function (err, result) {
         if (err) {
+          console.log(err);
           res.status(500);
           res.send(err);
         } else {
@@ -73,10 +76,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// DELETE course with id
+// DELETE student with id
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "DELETE FROM course WHERE course_id = ?;";
+  let sql = "DELETE FROM student WHERE student_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -94,20 +97,20 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// PUT course with id
+// PUT student with id
 router.put("/:id", async (req, res, next) => {
-  let course = req.body;
-  console.log(course);
+  let student = req.body;
+  console.log(student);
 
-  let errorMessage = validate(course); //validate request here
+  let errorMessage = validate(student); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE course SET ? WHERE course_id = ?";
+    let sql = "UPDATE student SET ? WHERE student_id = ?";
 
     try {
-      db.query(sql, [course, req.params.id], function (err, result) {
+      db.query(sql, [student, req.params.id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -124,16 +127,13 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // validate request here...returns error message
-function validate(course) {
-  var errorMessage = "[";
-
-  //if(course.course_attribute != undefined) {
-  //    errorMessage += '{"attributeName":"course_attribute" , "message":"Must have attribute"}';
+function validate(student) {
+  let errorMessage = "[";
 
   errorMessage += "]";
   return errorMessage;
 }
 
 module.exports = {
-  coursesRouter: router,
+  studentRouter: router,
 };
