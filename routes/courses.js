@@ -112,7 +112,7 @@ router.delete("/:id", async (req, res, next) => {
         res.status(500);
         res.send(err);
       } else {
-        // course_terms deleted automatically
+        // course_terms deleted automatically by db
         res.json(result);
       }
     });
@@ -145,8 +145,7 @@ router.put("/:id", async (req, res, next) => {
           res.status(500);
           res.send(err);
         } else {
-          // delete course_terms
-          // add course_terms
+          // delete course_terms and add new course_terms
           if (course_terms != undefined) {
             sql = "DELETE FROM course_term WHERE course_id = ?;";
             queryItems = [course_id];
@@ -158,7 +157,6 @@ router.put("/:id", async (req, res, next) => {
               sql += "INSERT INTO course_term SET ?;";
               queryItems.push(value);
             });
-            // delete terms and add new terms
             db.query(sql, queryItems, function (err, result2) {
               if (err) {
                 res.status(500);
@@ -177,134 +175,6 @@ router.put("/:id", async (req, res, next) => {
     }
   }
 });
-
-////////////////////////// Remove:
-
-// // GET course_terms by course_id
-// router.get("/:id/terms/", async (req, res, next) => {
-//   let id = req.params.id;
-//   let sql = "SELECT * FROM course_term WHERE course_id = ?;";
-
-//   try {
-//     db.query(sql, [id], function (err, result) {
-//       if (err) {
-//         res.status(500);
-//         res.send(err);
-//       } else {
-//         res.json(result);
-//       }
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500);
-//     res.send(error);
-//   }
-// });
-
-// POST course_term to course
-// router.post("/:id/terms/", async (req, res, next) => {
-//   let course_term = req.body;
-//   course_term.course_id = req.params.id;
-//   console.log(course_term);
-
-//   let errorMessage = validate_term(course_term); //validate request here
-//   if (errorMessage.length > 2) {
-//     res.status(406);
-//     res.send(errorMessage);
-//   } else {
-//     let sql = "INSERT INTO course_term SET ?;";
-
-//     try {
-//       db.query(sql, [course_term], function (err, result) {
-//         if (err) {
-//           res.status(500);
-//           res.send(err);
-//         } else {
-//           res.json({ id: result.insertId }); // change, no insert id available
-//         }
-//       });
-//     } catch (error) {
-//       console.log(error);
-//       res.status(500);
-//       res.send(error);
-//     }
-//   }
-// });
-
-// // DELETE course_terms with course_id
-// router.delete("/:id/terms/", async (req, res, next) => {
-//   let id = req.params.id;
-//   let sql = "DELETE FROM course_term WHERE course_id = ?;";
-
-//   try {
-//     db.query(sql, [id], function (err, result) {
-//       if (err) {
-//         res.status(500);
-//         res.send(err);
-//       } else {
-//         res.json(result);
-//       }
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500);
-//     res.send(error);
-//   }
-// });
-
-// // DELETE course_terms with course_id and term_id
-// router.delete("/:id/terms/:term_id/", async (req, res, next) => {
-//   let id = req.params.id;
-//   let sql = "DELETE FROM course_term WHERE course_id = ? AND term_id = ?;";
-
-//   try {
-//     db.query(sql, [id, term_id], function (err, result) {
-//       if (err) {
-//         res.status(500);
-//         res.send(err);
-//       } else {
-//         res.json(result);
-//       }
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500);
-//     res.send(error);
-//   }
-// });
-
-// // PUT course_term with course_id and term_id
-// router.put("/:id/terms/:term_id", async (req, res, next) => {
-//   let course_term = req.body;
-//   course_term.course_id = req.params.id;
-//   console.log(course_term);
-
-//   let errorMessage = validate_term(course_term); //validate request here
-//   if (errorMessage.length > 2) {
-//     res.status(406);
-//     res.send(errorMessage);
-//   } else {
-//     let sql = "UPDATE course SET ? WHERE course_id = ? AND term_id = ?";
-
-//     try {
-//       db.query(sql, [course_term, req.params.id, req.params.term_id], function (
-//         err,
-//         result
-//       ) {
-//         if (err) {
-//           res.status(500);
-//           res.send(err);
-//         } else {
-//           res.json(result);
-//         }
-//       });
-//     } catch (error) {
-//       console.log(error);
-//       res.status(500);
-//       res.send(error);
-//     }
-//   }
-// });
 
 // validate request here...returns error message
 function validate(course) {
