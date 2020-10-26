@@ -8,6 +8,7 @@ const db = mysql.createPool({
   password: database.password,
   database: database.databasename,
   connectionLimit: 10,
+  multipleStatements: true,
 });
 
 const con = mysql.createConnection({
