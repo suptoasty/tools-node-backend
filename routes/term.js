@@ -74,7 +74,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// DELETE student with id
+// DELETE term with id
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = "DELETE FROM term WHERE term_id = ?;";
@@ -95,7 +95,7 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// PUT student with id
+// PUT term with id
 router.put("/:id", async (req, res, next) => {
   let term = req.body;
   console.log(term);
