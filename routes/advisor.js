@@ -1,13 +1,34 @@
-const { request } = require("express");
 const express = require("express");
 const router = express.Router();
 const { db } = require("../src/database");
 const config = require("../config/config");
 
-// GET user by id
+// TODO: GET all advisors
+router.get("/", async (req, res, next) => {
+  let sql = "SELECT * FROM advisor;";
+
+  try {
+    db.query(sql, [], function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+});
+
+// TODO: GET advisors by page
+
+// GET advisor by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM user WHERE user_id = ?;";
+  let sql = `SELECT * FROM user RIGHT JOIN advisor ON user.advisor=advisor.advisor_id WHERE advisor_id = ?;`;
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -25,20 +46,20 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// POST user
+// POST advisor
 router.post("/", async (req, res, next) => {
-  let user = req.body;
-  console.log(user);
+  let advisor = req.body;
+  console.log(advisor);
 
-  let errorMessage = validate(user); //validate request here
+  let errorMessage = validate(advisor); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "INSERT INTO user SET ?;";
+    let sql = "INSERT INTO advisor SET ?;";
 
     try {
-      db.query(sql, [user], function (err, result) {
+      db.query(sql, [advisor], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -54,10 +75,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// DELETE user with id
+// DELETE advisor with id
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "DELETE FROM user WHERE user_id = ?;";
+  let sql = "DELETE FROM advisor WHERE advisor_id = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -75,20 +96,20 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-// PUT user with id
+// PUT advisor with id
 router.put("/:id", async (req, res, next) => {
-  let user = req.body;
-  console.log(user);
+  let advisor = req.body;
+  console.log(advisor);
 
-  let errorMessage = validate(user); //validate request here
+  let errorMessage = validate(advisor); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = "UPDATE user SET ? WHERE user_id = ?";
+    let sql = "UPDATE advisor SET ? WHERE advisor_id = ?";
 
     try {
-      db.query(sql, [user, req.params.id], function (err, result) {
+      db.query(sql, [advisor, req.params.id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
@@ -105,18 +126,8 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // validate request here...returns error message
-function validate(user) {
+function validate(advisor) {
   var errorMessage = "[";
-
-  if (user.user_name === "") {
-    errorMessage += "User Name must not be null!";
-  }
-  if (user.user_email === "") {
-    errorMessage += "User Email must not be null!";
-  }
-  if (user.user_password === "") {
-    errorMessage += "User Password must not be null!";
-  }
 
   //if(advisor.advisor_attribute != undefined) {
   //    errorMessage += '{"attributeName":"advisor_attribute" , "message":"Must have attribute"}';
@@ -126,5 +137,5 @@ function validate(user) {
 }
 
 module.exports = {
-  usersRouter: router,
+  advisorRouter: router,
 };

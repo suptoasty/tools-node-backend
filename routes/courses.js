@@ -1,13 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { db } = require('../src/database');
+const { db } = require("../src/database");
+const config = require("../config/config");
 
-// TODO: GET all courses
-router.get('/', function(req, res, next) {
-  let sql = 'SELECT * FROM courseslist;';
+// GET all courses
+router.get("/", async (req, res, next) => {
+  let sql = "SELECT * FROM course;";
 
   try {
-    db.query(sql, [], function(err, result) {
+    db.query(sql, [], function (err, result) {
       if (err) {
         res.status(500);
         res.send(err);
@@ -15,101 +16,120 @@ router.get('/', function(req, res, next) {
         res.json(result);
       }
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.log(error);
     res.status(500);
     res.send(error);
   }
 });
-
-
-// TODO: GET courses by page
-
 
 // GET course by id
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = 'SELECT * FROM courseslist WHERE course_id = ?;';
+  let sql = "SELECT * FROM course WHERE course_id = ?;";
+  sql += "SELECT * FROM course_term WHERE course_id = ?;";
 
   try {
-    db.query(sql, [id], function(err, result) {
+    db.query(sql, [id, id], function (err, result) {
       if (err) {
         res.status(500);
         res.send(err);
       } else {
-        res.json(result);
+        result[0][0].terms = result[1];
+        res.json(result[0]);
       }
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.log(error);
     res.status(500);
     res.send(error);
   }
-
 });
-
 
 // POST course
-router.post('/', async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   let course = req.body;
+  let course_terms = course.terms;
+  delete course.terms;
+  delete course.course_id;
   console.log(course);
+  console.log(course_terms);
 
   let errorMessage = validate(course); //validate request here
   if (errorMessage.length > 2) {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = 'INSERT INTO courses.courseslist SET ?;';
-    
+    let sql = "INSERT INTO course SET ?;";
+
     try {
-      db.query(sql, [course], function(err, result) {
+      db.query(sql, [course], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
         } else {
-          res.json({ id: result.insertId });
+          course_id = result.insertId;
+          //create course_terms
+          if (course_terms != undefined) {
+            sql = "";
+            queryItems = [];
+            course_terms.forEach((value, index, array) => {
+              value.course_id = course_id;
+              value.term_id = value.term;
+              delete value.term;
+              sql += "INSERT INTO course_term SET ?;";
+              queryItems.push(value);
+            });
+            db.query(sql, queryItems, function (err, result) {
+              if (err) {
+                res.status(500);
+                res.send(err);
+              } else {
+                res.json({ id: course_id });
+              }
+            });
+          } else {
+            res.json({ id: course_id });
+          }
         }
       });
-    } 
-    catch (error) {
+    } catch (error) {
       console.log(error);
       res.status(500);
       res.send(error);
     }
-
   }
 });
 
-
 // DELETE course with id
-router.delete('/:id', async (req, res, next) => {
-  console.log("DELETE at /courses/" + req.params.id);
+router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = 'DELETE FROM courses.courseslist WHERE course_id = ?;';
+  let sql = "DELETE FROM course WHERE course_id = ?;";
 
   try {
-    db.query(sql, [id], function(err, result) {
+    db.query(sql, [id], function (err, result) {
       if (err) {
         res.status(500);
         res.send(err);
       } else {
+        // course_terms deleted automatically by db
         res.json(result);
       }
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.log(error);
     res.status(500);
     res.send(error);
   }
 });
 
-
 // PUT course with id
-router.put('/:id', async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   let course = req.body;
+  let course_id = req.params.id;
+  let course_terms = course.terms;
+  delete course.terms;
+  course.course_id = course_id;
   console.log(course);
 
   let errorMessage = validate(course); //validate request here
@@ -117,36 +137,53 @@ router.put('/:id', async (req, res, next) => {
     res.status(406);
     res.send(errorMessage);
   } else {
-    let sql = 'UPDATE courseslist SET ? WHERE course_id = ?';
-    
+    let sql = "UPDATE course SET ? WHERE course_id = ?";
+
     try {
-      db.query(sql, [course, req.params.id], function(err, result) {
+      db.query(sql, [course, course_id], function (err, result) {
         if (err) {
           res.status(500);
           res.send(err);
         } else {
-          res.json(result);
+          // delete course_terms and add new course_terms
+          if (course_terms != undefined) {
+            sql = "DELETE FROM course_term WHERE course_id = ?;";
+            queryItems = [course_id];
+
+            course_terms.forEach((value, index, array) => {
+              value.course_id = course_id;
+              value.term_id = value.term;
+              delete value.term;
+              sql += "INSERT INTO course_term SET ?;";
+              queryItems.push(value);
+            });
+            db.query(sql, queryItems, function (err, result2) {
+              if (err) {
+                res.status(500);
+                res.send(err);
+              } else {
+                res.json(result);
+              }
+            });
+          }
         }
       });
-    } 
-    catch (error) {
+    } catch (error) {
       console.log(error);
       res.status(500);
       res.send(error);
     }
-
   }
 });
-
 
 // validate request here...returns error message
 function validate(course) {
-  var errorMessage = '[';
+  var errorMessage = "[";
 
   //if(course.course_attribute != undefined) {
   //    errorMessage += '{"attributeName":"course_attribute" , "message":"Must have attribute"}';
-  
-  errorMessage += ']';
+
+  errorMessage += "]";
   return errorMessage;
 }
 
