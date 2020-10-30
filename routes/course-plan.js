@@ -190,7 +190,7 @@ router.get("/:id/items/:item_id", async (req, res, next) => {
 // PUT course plan item
 router.put("/:id/items/:item_id", async (req, res, next) => {
   let cp_item = req.body;
-  cp_item.plan = req.params.id;
+  cp_item.course_plan_item_plan = req.params.id;
   cp_item.course_plan_item_id = req.params.item_id;
   console.log(cp_item);
 
