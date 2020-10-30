@@ -197,7 +197,7 @@ async function createDB(name = database.databasename) {
         name +
         `.course_plan_item(
             course_plan_item_id int(255) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            course_plan_item_grade int(2),
+            course_plan_item_grade varchar(255),
             course_plan_item_status varchar(255),
             course_plan_item_plan int(255) UNSIGNED,
             course_plan_item_semester int(255) UNSIGNED,

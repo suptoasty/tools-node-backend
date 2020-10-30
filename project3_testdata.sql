@@ -106,8 +106,8 @@ INSERT INTO `course_plan` (`course_plan_id`, `course_plan_last_updated`, `course
 --
 
 INSERT INTO `course_plan_item` (`course_plan_item_id`, `course_plan_item_grade`, `course_plan_item_status`, `course_plan_item_plan`, `course_plan_item_semester`, `course_plan_item_course`) VALUES
-(1, 100, 'Complete', 1, 4, 1),
-(2, 80, 'Complete', 1, 5, 2);
+(1, '100', 'Complete', 1, 4, 1),
+(2, '80', 'Complete', 1, 5, 2);
 
 --
 -- Dumping data for table `user`
