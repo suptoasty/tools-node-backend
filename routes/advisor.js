@@ -28,7 +28,7 @@ router.get("/", async (req, res, next) => {
 // GET advisor by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = `SELECT * FROM user RIGHT JOIN advisor ON user.advisor=advisor.advisor_id WHERE advisor_id = ?;`;
+  let sql = `SELECT * FROM user RIGHT JOIN advisor ON user.user_advisor=advisor.advisor_id WHERE advisor_id = ?;`;
 
   try {
     db.query(sql, [id], function (err, result) {

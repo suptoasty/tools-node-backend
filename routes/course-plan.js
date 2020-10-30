@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
 // GET courseplans by student_id
 router.get("/student/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM course_plan WHERE student = ?;";
+  let sql = "SELECT * FROM course_plan WHERE course_plan_student = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
@@ -148,7 +148,7 @@ router.put("/:id", async (req, res, next) => {
 // GET all course plan items for a course plan
 router.get("/:id/items", async (req, res, next) => {
   let id = req.params.id;
-  let sql = "SELECT * FROM course_plan_item WHERE plan = ?;";
+  let sql = "SELECT * FROM course_plan_item WHERE course_plan_item_plan = ?;";
 
   try {
     db.query(sql, [id], function (err, result) {
