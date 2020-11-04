@@ -1,26 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { db } = require("../src/database");
-const config = require("../config/config");
+const { db, stdQuery, stdQueryPut, stdQueryPost } = require("../src/database");
 
 // GET all courses
 router.get("/", async (req, res, next) => {
   let sql = "SELECT * FROM course;";
-
-  try {
-    db.query(sql, [], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
+  stdQuery(res, sql, []);
 });
 
 // GET course by id
@@ -105,22 +90,7 @@ router.post("/", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = "DELETE FROM course WHERE course_id = ?;";
-
-  try {
-    db.query(sql, [id], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        // course_terms deleted automatically by db
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
+  stdQuery(res, sql, [id]);
 });
 
 // PUT course with id

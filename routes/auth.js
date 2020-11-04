@@ -37,7 +37,7 @@ router.post("/login", async (req, res, next) => {
   //find user by email
   let sql = "SELECT * FROM user WHERE user_email = ?;";
   try {
-    await db.query(sql, [user.email], function (err, result) {
+    db.query(sql, [user.email], function (err, result) {
       if (err) {
         res.status(500);
         res.send(err);
