@@ -1,121 +1,50 @@
-const { request } = require("express");
 const express = require("express");
 const router = express.Router();
-const { db } = require("../src/database");
-const config = require("../config/config");
+const { db, stdQuery, stdQueryPut, stdQueryPost } = require("../src/database");
 
 // GET user by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = "SELECT * FROM user WHERE user_id = ?;";
-
-  try {
-    db.query(sql, [id], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
+  stdQuery(res, sql, [id]);
 });
 
 // POST user
 router.post("/", async (req, res, next) => {
   let user = req.body;
   console.log(user);
-
-  let errorMessage = validate(user); //validate request here
-  if (errorMessage.length > 2) {
-    res.status(406);
-    res.send(errorMessage);
-  } else {
-    let sql = "INSERT INTO user SET ?;";
-
-    try {
-      db.query(sql, [user], function (err, result) {
-        if (err) {
-          res.status(500);
-          res.send(err);
-        } else {
-          res.json({ id: result.insertId });
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      res.status(500);
-      res.send(error);
-    }
-  }
+  let sql = "INSERT INTO user SET ?;";
+  stdQueryPost(res, sql, [users], validate(user));
 });
 
 // DELETE user with id
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = "DELETE FROM user WHERE user_id = ?;";
-
-  try {
-    db.query(sql, [id], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
+  stdQuery(res, sql, [id]);
 });
 
 // PUT user with id
 router.put("/:id", async (req, res, next) => {
   let user = req.body;
   console.log(user);
-
-  let errorMessage = validate(user); //validate request here
-  if (errorMessage.length > 2) {
-    res.status(406);
-    res.send(errorMessage);
-  } else {
-    let sql = "UPDATE user SET ? WHERE user_id = ?";
-
-    try {
-      db.query(sql, [user, req.params.id], function (err, result) {
-        if (err) {
-          res.status(500);
-          res.send(err);
-        } else {
-          res.json(result);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      res.status(500);
-      res.send(error);
-    }
-  }
+  let sql = "UPDATE user SET ? WHERE user_id = ?";
+  stdQueryPut(res, sql, [user, req.params.id], validate(user));
 });
 
-// validate request here...returns error message
+// validate USER
 function validate(user) {
   var errorMessage = "[";
 
+  // TODO: Append JSON instead of just a string
   if (user.user_name === "") {
-    errorMessage += "User Name must not be null!";
+    errorMessage += "User Name must not be empty.";
   }
   if (user.user_email === "") {
-    errorMessage += "User Email must not be null!";
+    errorMessage += "User Email must not be empty.";
   }
   if (user.user_password === "") {
-    errorMessage += "User Password must not be null!";
+    errorMessage += "User Password must not be empty.";
   }
 
   //if(advisor.advisor_attribute != undefined) {

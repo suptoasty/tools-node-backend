@@ -17,6 +17,58 @@ const con = mysql.createConnection({
   password: database.password,
 });
 
+
+function stdQuery(res, sql, params) {
+  try {
+    db.query(sql, params, function (err, result) {
+      if (err) {
+        res.status(500);
+        res.send(err);
+      } else {
+        res.json(result);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
+}
+
+function stdQueryPost(res, sql, params, errorMessage) {
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    try {
+      db.query(sql, params, function (err, result) {
+        if (err) {
+          res.status(500);
+          res.send(err);
+        } else {
+          res.json({ id: result.insertId });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500);
+      res.send(error);
+    }
+  }
+}
+
+function stdQueryPut(res, sql, params, errorMessage) {
+  if (errorMessage.length > 2) {
+    res.status(406);
+    res.send(errorMessage);
+  } else {
+    stdQuery(res, sql, params);
+  }
+}
+
+
+
+
 async function createDB(name = database.databasename) {
   try {
     //db
@@ -233,4 +285,7 @@ module.exports = {
   db: db,
   createDB: createDB,
   deleteDB: deleteDB,
+  stdQuery: stdQuery,
+  stdQueryPost: stdQueryPost,
+  stdQueryPut: stdQueryPut,
 };
