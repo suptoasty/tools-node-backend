@@ -19,7 +19,6 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   let term = req.body;
   console.log(term);
-
   let sql = "INSERT INTO term SET ?;";
   stdQueryPost(res, sql, [term], validate(term));
 });
@@ -35,7 +34,6 @@ router.delete("/:id", async (req, res, next) => {
 router.put("/:id", async (req, res, next) => {
   let term = req.body;
   console.log(term);
-
   let sql = "UPDATE term SET ? WHERE term_id  = ?";
   stdQueryPut(res, sql, [term, res.params.id], validate(term));
 });

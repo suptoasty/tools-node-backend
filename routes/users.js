@@ -13,7 +13,6 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   let user = req.body;
   console.log(user);
-
   let sql = "INSERT INTO user SET ?;";
   stdQueryPost(res, sql, [users], validate(user));
 });
@@ -29,7 +28,6 @@ router.delete("/:id", async (req, res, next) => {
 router.put("/:id", async (req, res, next) => {
   let user = req.body;
   console.log(user);
-  
   let sql = "UPDATE user SET ? WHERE user_id = ?";
   stdQueryPut(res, sql, [user, req.params.id], validate(user));
 });

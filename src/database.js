@@ -287,5 +287,5 @@ module.exports = {
   deleteDB: deleteDB,
   stdQuery: stdQuery,
   stdQueryPost: stdQueryPost,
-  stdQueryPut: stdQueryPut
+  stdQueryPut: stdQueryPut,
 };

@@ -20,7 +20,6 @@ router.post("/", async (req, res, next) => {
   let degree = req.body;
   degree.degree_id = undefined;
   console.log(degree);
-  
   let sql = "INSERT INTO degree SET ?;";
   stdQueryPost(res, sql, [degree], validateDegree(degree));
 });
@@ -37,7 +36,6 @@ router.put("/:id", async (req, res, next) => {
   let degree = req.body;
   degree.degree_id = req.params.id;
   console.log(degree);
-
   let sql = "UPDATE degree SET ? WHERE degree_id = ?";
   stdQueryPut(res, sql, [degree, req.params.id], validateDegree(degree));
 });
@@ -60,9 +58,13 @@ router.put("/:id/items/:item_id", async (req, res, next) => {
   let degreePlan = req.body;
   degreePlan.degree_plan_id = req.params.item_id;
   console.log(degreePlan);
-
   let sql = "UPDATE degree_plan SET ? WHERE degree_plan_id = ?";
-  stdQueryPut(res, sql, [degreePlan, req.params.id], validateDegreePlan(degreePlan));
+  stdQueryPut(
+    res,
+    sql,
+    [degreePlan, req.params.id],
+    validateDegreePlan(degreePlan)
+  );
 });
 
 // POST degree_plan item
@@ -71,7 +73,6 @@ router.post("/:id/items", async (req, res, next) => {
   degreePlan.degree_plan_id = undefined;
   degreePlan.degree_plan_degree = req.params.id;
   console.log(degreePlan);
-
   let sql = "INSERT INTO degree_plan SET ?;";
   stdQueryPost(res, sql, [degreePlan], validateDegreePlan(degreePlan));
 });

@@ -4,14 +4,15 @@ const { db, stdQuery, stdQueryPut, stdQueryPost } = require("../src/database");
 
 // GET all semesters
 router.get("/", async (req, res, next) => {
-  let sql = "SELECT * FROM semester JOIN term ON (term.term_id = semester.semester_term);";
+  let sql =
+    "SELECT * FROM semester JOIN term ON (term.term_id = semester.semester_term);";
   stdQuery(res, sql, []);
 });
 
 // GET semester by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
-  let sql = 
+  let sql =
     "SELECT * FROM semester JOIN term ON (term.term_id = semester.semester_term) WHERE semester_id = ?;";
   stdQuery(res, sql, [id]);
 });
