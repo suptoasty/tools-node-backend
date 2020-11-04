@@ -128,7 +128,7 @@ router.put("/:id", async (req, res, next) => {
 // Degree_Plan
 // GET all degree_plan items for a degree
 router.get("/:id/items", async (req, res, next) => {
-  let sql = "SELECT * FROM degree_plan WHERE degree = ?;";
+  let sql = "SELECT * FROM degree_plan WHERE degree_plan_degree = ?;";
 
   try {
     db.query(sql, [req.params.id], function (err, result) {
@@ -201,7 +201,7 @@ router.put("/:id/items/:item_id", async (req, res, next) => {
 router.post("/:id/items", async (req, res, next) => {
   let degreePlan = req.body;
   degreePlan.degree_plan_id = undefined;
-  degreePlan.degree = req.params.id;
+  degreePlan.degree_plan_degree = req.params.id;
   console.log(degreePlan);
 
   let errorMessage = validateDegreePlan(degreePlan); //validate request here

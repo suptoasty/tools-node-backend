@@ -44,7 +44,7 @@ INSERT INTO `degree` (`degree_id`, `degree_name`, `degree_dept`, `degree_hours`)
 -- Dumping data for table `degree_plan`
 --
 
-INSERT INTO `degree_plan` (`degree_plan_id`, `degree`, `course`) VALUES
+INSERT INTO `degree_plan` (`degree_plan_id`, `degree_plan_degree`, `degree_plan_course`) VALUES
 (1, 2, 1),
 (2, 2, 2),
 (3, 3, 1),
@@ -85,7 +85,7 @@ INSERT INTO `semester` (`semester_id`, `semester_name`, `semester_start`, `semes
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`student_id`, `student_fname`, `student_lname`, `student_initial`, `student_graduation_date`, `degree`, `advisor`) VALUES
+INSERT INTO `student` (`student_id`, `student_fname`, `student_lname`, `student_initial`, `student_graduation_date`, `student_degree`, `student_advisor`) VALUES
 (1, 'Nathan', 'Woodruff', 'D', '2021-04-30', 3, 1),
 (2, 'Jason', 'Lonsinger', 'L', '2021-04-30', 1, 1),
 (3, 'Ryan', 'Burnett', NULL, '2021-04-30', 2, 1),
@@ -95,7 +95,7 @@ INSERT INTO `student` (`student_id`, `student_fname`, `student_lname`, `student_
 -- Dumping data for table `course_plan`
 --
 
-INSERT INTO `course_plan` (`course_plan_id`, `course_plan_last_updated`, `student`) VALUES
+INSERT INTO `course_plan` (`course_plan_id`, `course_plan_last_updated`, `course_plan_student`) VALUES
 (1, '2020-10-10 10:10:10', 1),
 (2, NULL, 3),
 (3, NULL, 2),
@@ -105,15 +105,15 @@ INSERT INTO `course_plan` (`course_plan_id`, `course_plan_last_updated`, `studen
 -- Dumping data for table `course_plan_item`
 --
 
-INSERT INTO `course_plan_item` (`course_plan_item_id`, `course_plan_item_grade`, `course_plan_item_status`, `plan`, `semester`, `course`) VALUES
-(1, 100, 'Complete', 1, 4, 1),
-(2, 80, 'Complete', 1, 5, 2);
+INSERT INTO `course_plan_item` (`course_plan_item_id`, `course_plan_item_grade`, `course_plan_item_status`, `course_plan_item_plan`, `course_plan_item_semester`, `course_plan_item_course`) VALUES
+(1, '100', 'Complete', 1, 4, 1),
+(2, '80', 'Complete', 1, 5, 2);
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_name`, `user_password`, `user_email`, `student`, `advisor`) VALUES
+INSERT INTO `user` (`user_id`, `user_name`, `user_password`, `user_email`, `user_student`, `user_advisor`) VALUES
 (18, 'jason.lonsinger', 'password', 'jason.lonsinger@eagles.oc.edu', 2, NULL),
 (19, 'nathan.woodruff', 'password', 'nathan.woodruff@eagles.oc.edu', 1, NULL),
 (20, 'lane.simpson', 'password', 'lane.simpson@eagles.oc.edu', 4, NULL),
