@@ -14,7 +14,7 @@ router.post("/", async (req, res, next) => {
   let user = req.body;
   console.log(user);
   let sql = "INSERT INTO user SET ?;";
-  stdQueryPost(res, sql, [users], validate(user));
+  stdQueryPost(res, sql, [user], validate(user));
 });
 
 // DELETE user with id
