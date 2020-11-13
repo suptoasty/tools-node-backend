@@ -35,7 +35,7 @@ router.put("/:id", async (req, res, next) => {
   let term = req.body;
   console.log(term);
   let sql = "UPDATE term SET ? WHERE term_id  = ?";
-  stdQueryPut(res, sql, [term, res.params.id], validate(term));
+  stdQueryPut(res, sql, [term, req.params.id], validate(term));
 });
 
 // Validate TERM
