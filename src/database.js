@@ -204,8 +204,8 @@ async function createDB(name = database.databasename) {
             user_email varchar(255) NOT NULL,
             user_student int(255) UNSIGNED,
             user_advisor int(255) UNSIGNED,
-            FOREIGN KEY(user_student) REFERENCES student(student_id) ON DELETE SET NULL ON UPDATE RESTRICT,
-            FOREIGN KEY(user_advisor) REFERENCES advisor(advisor_id) ON DELETE SET NULL ON UPDATE RESTRICT
+            FOREIGN KEY(user_student) REFERENCES student(student_id) ON DELETE CASCADE ON UPDATE RESTRICT,
+            FOREIGN KEY(user_advisor) REFERENCES advisor(advisor_id) ON DELETE CASCADE ON UPDATE RESTRICT
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`,
       function (err, result) {
         if (err) throw new Error(err);
