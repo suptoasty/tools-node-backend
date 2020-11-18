@@ -1,132 +1,45 @@
-const { request } = require("express");
 const express = require("express");
 const router = express.Router();
-const { db } = require("../src/database");
-const config = require("../config/config");
+const { db, stdQuery, stdQueryPut, stdQueryPost } = require("../src/database");
 
 // GET all students
 router.get("/", async (req, res, next) => {
   let sql = "SELECT * FROM student;";
-
-  try {
-    db.query(sql, [], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
+  stdQuery(res, sql, []);
 });
 
 // GET student by id
 router.get("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql =
-    "SELECT * FROM user RIGHT JOIN student ON user.student=student.student_id WHERE student_id = ?; ";
-
-  try {
-    db.query(sql, [id], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
+    "SELECT * FROM user RIGHT JOIN student ON user.user_student=student.student_id WHERE student_id = ?; ";
+  stdQuery(res, sql, [id]);
 });
 
 // POST student
 router.post("/", async (req, res, next) => {
   let student = req.body;
   console.log(student);
-
-  let errorMessage = validate(student); //validate request here
-  if (errorMessage.length > 2) {
-    res.status(406);
-    res.send(errorMessage);
-  } else {
-    let sql = "INSERT INTO student SET ?;";
-
-    try {
-      db.query(sql, [student], function (err, result) {
-        if (err) {
-          console.log(err);
-          res.status(500);
-          res.send(err);
-        } else {
-          res.json({ id: result.insertId });
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      res.status(500);
-      res.send(error);
-    }
-  }
+  let sql = "INSERT INTO student SET ?;";
+  stdQueryPost(res, sql, [student], validate(student));
 });
 
 // DELETE student with id
 router.delete("/:id", async (req, res, next) => {
   let id = req.params.id;
   let sql = "DELETE FROM student WHERE student_id = ?;";
-
-  try {
-    db.query(sql, [id], function (err, result) {
-      if (err) {
-        res.status(500);
-        res.send(err);
-      } else {
-        res.json(result);
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-    res.send(error);
-  }
+  stdQuery(res, sql, [id]);
 });
 
 // PUT student with id
 router.put("/:id", async (req, res, next) => {
   let student = req.body;
   console.log(student);
-
-  let errorMessage = validate(student); //validate request here
-  if (errorMessage.length > 2) {
-    res.status(406);
-    res.send(errorMessage);
-  } else {
-    let sql = "UPDATE student SET ? WHERE student_id = ?";
-
-    try {
-      db.query(sql, [student, req.params.id], function (err, result) {
-        if (err) {
-          res.status(500);
-          res.send(err);
-        } else {
-          res.json(result);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      res.status(500);
-      res.send(error);
-    }
-  }
+  let sql = "UPDATE student SET ? WHERE student_id = ?";
+  stdQueryPut(res, sql, [student, req.params.id], validate(student));
 });
 
-// validate request here...returns error message
+// Validate STUDENT
 function validate(student) {
   let errorMessage = "[";
 
